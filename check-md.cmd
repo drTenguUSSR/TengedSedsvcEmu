@@ -1,0 +1,1 @@
+markdownlint   --disable MD033 -- *.md
