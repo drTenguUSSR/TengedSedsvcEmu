@@ -1,0 +1,16 @@
+
+application/vnd.intertrust.cm.sedsvc+json;type=svcCheckPdf-request
+{
+	"markers" : [
+        "[МЕСТО ДЛЯ ПОДПИСИ]","[МЕСТО ДЛЯ ШТАМПА]"
+		,"[МЕСТОДЛЯПОДПИСИ]","[МЕСТОДЛЯШТАМПА]"
+        ],
+	"skipPDFA1check" : true
+}
+
+{
+
+	"skipPDFA1check" : true
+}
+
+http://localhost:8070/ext-sedsvc/upload-m/?command=svcCheckPdf

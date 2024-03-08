@@ -1,0 +1,10 @@
+using: JS-YAML - YAML 1.2 parser / writer for JavaScript
+https://github.com/nodeca/js-yaml/tree/master
+
+<script src="js-yaml.min.js"></script>
+<script type="text/javascript">
+var doc = jsyaml.load('greeting: hello\nname: world');
+</script>
+========================================================================
+alternate yaml
+https://github.com/shockey/js-yaml-browser

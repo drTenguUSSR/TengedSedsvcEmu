@@ -1,0 +1,22 @@
+{
+  "checkStampInfos" : [ {
+    "fileName" : "svcCheckPdf.pdf",
+    "valid" : false,
+    "signStamps" : [ {
+      "pageNum" : 1,
+      "topLeft_x" : 42,
+      "topLeft_y" : 24,
+      "height" : 38,
+      "width" : 85,
+      "markerText" : "[МЕСТО ДЛЯ ПОДПИСИ]"
+    } ],
+    "regStamp" : {
+      "pageNum" : 1,
+      "topLeft_x" : 42,
+      "topLeft_y" : 33,
+      "height" : 6,
+      "width" : 66,
+      "markerText" : "[МЕСТО ДЛЯ ШТАМПА]"
+    }
+  } ]
+}

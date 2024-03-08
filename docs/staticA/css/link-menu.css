@@ -1,0 +1,48 @@
+/*link-menu BEG */
+
+.link-menu {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+}
+
+a.link-menu__item {
+    display: inline-block;
+    text-align: center;
+    margin: 0 1rem;
+    height: 6rem;
+    line-height: 6rem;
+    width: clamp(8rem, 12rem, 20rem);
+    border: .3rem solid white;
+    border-radius: 0.5rem 1rem 0.5rem;
+    color: buttontext;
+    background-color: buttonface;
+    text-decoration: none;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+a.link-menu__item:hover {
+    border-style: solid;
+    border-color: buttonborder;
+}
+
+a.link-menu__item_selected {
+    color: white;
+    font-weight: bold;
+    background-color: black;
+    border-color: buttonborder;
+    border-style: double;
+}
+
+a.link-menu__item_selected:hover {
+    cursor: text;
+    border-color: grey;
+}
+
+link-menu_vertical {
+    flex-direction: column;
+}
+/*link-menu END */

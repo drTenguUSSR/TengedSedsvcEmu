@@ -1,0 +1,2 @@
+ encoding directive inside a comment anywhere at the beginning of your file.
+<!-- -*- coding: iso-8859-1 -*- -->

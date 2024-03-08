@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="icon" sizes="50x50" type="image/gif" href="images/icons8-wrench.gif">
+    <link rel="stylesheet" type="text/css" href="css/clear-all.css">
+    <link rel="stylesheet" type="text/css" href="css/common-style.css">
+    <link rel="stylesheet" type="text/css" href="css/link-menu.css">
+    <title>TengedSedsvcEmu Project</title>
+<style type="text/css">
+    @-webkit-keyframes spincube {
+    from,to  { -webkit-transform: rotateX(0deg) rotateY(0deg) rotateZ(0deg); }
+    16%      { -webkit-transform: rotateY(-90deg);                           }
+    33%      { -webkit-transform: rotateY(-90deg) rotateZ(90deg);            }
+    50%      { -webkit-transform: rotateY(-180deg) rotateZ(90deg);           }
+    66%      { -webkit-transform: rotateY(-270deg) rotateX(90deg);           }
+    83%      { -webkit-transform: rotateX(90deg);                            }
+    }
+@keyframes spincube {
+    from,to {
+      -moz-transform: rotateX(0deg) rotateY(0deg) rotateZ(0deg);
+      -ms-transform: rotateX(0deg) rotateY(0deg) rotateZ(0deg);
+      transform: rotateX(0deg) rotateY(0deg) rotateZ(0deg);
+    }
+    16% {
+      -moz-transform: rotateY(-90deg);
+      -ms-transform: rotateY(-90deg);
+      transform: rotateY(-90deg);
+    }
+    33% {
+      -moz-transform: rotateY(-90deg) rotateZ(90deg);
+      -ms-transform: rotateY(-90deg) rotateZ(90deg);
+      transform: rotateY(-90deg) rotateZ(90deg);
+    }
+    50% {
+      -moz-transform: rotateY(-180deg) rotateZ(90deg);
+      -ms-transform: rotateY(-180deg) rotateZ(90deg);
+      transform: rotateY(-180deg) rotateZ(90deg);
+    }
+    66% {
+      -moz-transform: rotateY(-270deg) rotateX(90deg);
+      -ms-transform: rotateY(-270deg) rotateX(90deg);
+      transform: rotateY(-270deg) rotateX(90deg);
+    }
+    83% {
+      -moz-transform: rotateX(90deg);
+      -ms-transform: rotateX(90deg);
+      transform: rotateX(90deg);
+    }
+}
+
+.cubespinner {
+    -webkit-animation-name:spincube;
+    -webkit-animation-timing-function:ease-in-out;
+    -webkit-animation-iteration-count:infinite;
+    -webkit-animation-duration:12s;
+    animation-name:spincube;
+    animation-timing-function:ease-in-out;
+    animation-iteration-count:infinite;
+    animation-duration:12s;
+    -webkit-transform-style:preserve-3d;
+    -moz-transform-style:preserve-3d;
+    -ms-transform-style:preserve-3d;
+    transform-style:preserve-3d;
+    -webkit-transform-origin:250px 250px 0;
+    -moz-transform-origin:250px 250px 0;
+    -ms-transform-origin:250px 250px 0;
+    transform-origin:250px 250px 0
+}
+
+    .cubespinner div { 
+        position:absolute;
+        width:500px;
+        height:500px;
+        border:5px solid lightgray;
+        background:rgba(255,255,255,.5);
+        box-shadow:inset 0 0 20px rgba(0,0,0,.2);
+        text-align:center;
+        font-size:50px;
+
+        background-image: url("images/marble.png") ;
+        background-repeat: no-repeat;
+        background-size: 100% 100%;
+        line-height: 50px;
+        color: #333;
+        opacity: .3;
+    }
+
+.cubespinner .face1 {
+    -webkit-transform:translateZ(250px);
+    -moz-transform:translateZ(250px);
+    -ms-transform:translateZ(250px);
+    transform:translateZ(250px)
+}
+
+.cubespinner .face2 {
+    -webkit-transform:rotateY(90deg) translateZ(250px);
+    -moz-transform:rotateY(90deg) translateZ(250px);
+    -ms-transform:rotateY(90deg) translateZ(250px);
+    transform:rotateY(90deg) translateZ(250px)
+}
+
+.cubespinner .face3 {
+    -webkit-transform:rotateY(90deg) rotateX(90deg) translateZ(250px);
+    -moz-transform:rotateY(90deg) rotateX(90deg) translateZ(250px);
+    -ms-transform:rotateY(90deg) rotateX(90deg) translateZ(250px);
+    transform:rotateY(90deg) rotateX(90deg) translateZ(250px)
+}
+
+.cubespinner .face4 {
+    -webkit-transform:rotateY(180deg) rotateZ(90deg) translateZ(250px);
+    -moz-transform:rotateY(180deg) rotateZ(90deg) translateZ(250px);
+    -ms-transform:rotateY(180deg) rotateZ(90deg) translateZ(250px);
+    transform:rotateY(180deg) rotateZ(90deg) translateZ(250px)
+}
+
+.cubespinner .face5 {
+    -webkit-transform:rotateY(-90deg) rotateZ(90deg) translateZ(250px);
+    -moz-transform:rotateY(-90deg) rotateZ(90deg) translateZ(250px);
+    -ms-transform:rotateY(-90deg) rotateZ(90deg) translateZ(250px);
+    transform:rotateY(-90deg) rotateZ(90deg) translateZ(250px)
+}
+
+.cubespinner .face6 {
+    -webkit-transform:rotateX(-90deg) translateZ(250px);
+    -moz-transform:rotateX(-90deg) translateZ(250px);
+    -ms-transform:rotateX(-90deg) translateZ(250px);
+    transform:rotateX(-90deg) translateZ(250px)
+}
+
+.stage {
+    position: absolute;
+    top: 5rem;
+    left: 7rem;
+    z-index: -1;
+}
+
+.bottom-test-area {
+    position: absolute;
+    bottom: 1rem;
+    width: 100vw;
+}
+
+</style>
+</head>
+<body>
+<h1>TengedSedsvcEmu Project</h1>
+<header class="link-menu">
+    <nav>
+        <a href="main.html" class="link-menu__item">main</a>
+    </nav>
+</header>
+
+
+<div class="stage">
+  <div class="cubespinner">
+    <div class="face1">word2pdf. Сервис преобразования документов в PDF/A-1 документ (preview и МЭДО)</div>
+    <div class="face2">svcCheckPdf. Сервис проверки валидности PDF по спецификации PDF/A-1 и извлечение координат штампов</div>
+    <div class="face3">svcOverPrintPdf. Сервис для наложения png файлов на указанные координаты заданного размера</div>
+    <div class="face4">svcRegSignStamp. Сервис для создания штампов регистрации и подписи</div>
+    <div class="face5">svcPassportConvert. Сервис преобразования конверта из МЭДО 2.5 в контейнер МЭДО 2.7</div>
+    <div class="face6">svcZipper. Сервис упаковки/распаковки файлов</div>
+  </div>
+</div>
+
+<nav class="bottom-test-area">
+    <a href="t1-button-decorator.html" class="link-menu__item">t1-button-decorator</a>
+    <a href="t2-static-2elem.html" class="link-menu__item">t2-static-2elem</a>
+    <a href="t3-json-edit.html" class="link-menu__item">t3-json-edit</a>
+    <a href="t4-button-link.html" class="link-menu__item">t4-button-link</a>
+</nav>
+
+</body>
+</html>

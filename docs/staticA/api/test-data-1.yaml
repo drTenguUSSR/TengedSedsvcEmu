@@ -1,0 +1,52 @@
+json:
+    vm-profiles-yaml:
+        small:
+            cpu:  2
+            ram:  2
+            disk: 10
+            os: rhel6 
+        large:
+            cpu:  4
+            ram:  4
+            disk: 10
+            os: rhel6 
+
+    vm-profiles-json:
+        small:  { cpu: 2, ram: 2, disk: 10, os: rhel6 } 
+        large:  { cpu: 4, ram: 4, disk: 10, os: rhel6 } 
+
+dat1:
+    dat2:
+        fieldA: |-
+                text 1 1 3
+                text 2-1
+                text 2-2
+                text 2-3
+
+dat4: >-
+        text 1 1 3e
+        text 2-1e
+        text 2-2e
+        text 2-3end
+
+dat2: !!str some text
+dat5: !!str 33
+
+port_mapping:
+  - 22:22
+  - 80:80
+  - 443:443
+
+serve:
+  - /robots.txt
+  - /favicon.ico
+  # - !*.html
+  # - !*.png
+  # - !.git
+
+geoblock_regions:
+  - dk
+  - fi
+  - is
+  - no
+  - se
