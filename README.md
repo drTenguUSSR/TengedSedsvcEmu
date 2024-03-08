@@ -1,5 +1,9 @@
 # TengedSedsvcEmu описание
 
+## текущая реализация
+
+[ссылка опубликованный в /docs](https://drtenguussr.github.io/TengedSedsvcEmu/staticA/index.html)
+
 ## назначение проекта
 
 TengedSedsvcEmu пет-проект реализующий интерфейс СЭДсервиса
