@@ -2,7 +2,7 @@
 
 ## текущая реализация
 
-[ссылка опубликованный в /docs](https://drtenguussr.github.io/TengedSedsvcEmu/staticA/index.html)
+[ссылка на TengedSedsvcEmu опубликованная в /docs](https://drtenguussr.github.io/TengedSedsvcEmu/staticA/index.html)
 
 ## назначение проекта
 
