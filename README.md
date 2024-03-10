@@ -170,10 +170,4 @@ TengedSedsvcEmu пет-проект реализующий интерфейс С
 
 ## полезная информация
 
-[markDown информация cookbook-markdown.md](../../../drTenguUSSR/blob/main/cookbook-markdown.md)
-
-[sublime информация cookbook-sublime.md](../../../drTenguUSSR/blob/main/cookbook-sublime.md)
-
-[git информация cookbook-git.md](../../../drTenguUSSR/blob/main/cookbook-git.md)
-
-[github информация cookbook-gitHub.md](../../../drTenguUSSR/blob/main/cookbook-gitHub.md)
+[полезная информация](../../../drTenguUSSR/blob/main/README.md#useful-info-links)
