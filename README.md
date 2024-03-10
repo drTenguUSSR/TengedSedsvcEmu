@@ -170,4 +170,4 @@ TengedSedsvcEmu пет-проект реализующий интерфейс С
 
 ## полезная информация
 
-[полезная информация](../../../drTenguUSSR/blob/main/README.md#useful-info-links)
+[полезная информация](https://drtenguussr.github.io/#useful-info-links)
