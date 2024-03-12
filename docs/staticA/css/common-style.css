@@ -1,3 +1,7 @@
+:root {
+    --menu-item-padding: .5rem;
+}
+
 body {
     margin: 0;
 }
@@ -17,11 +21,19 @@ h1 {
     box-sizing: border-box;
 }
 
-.row-block {
+.row-header {
     display: flex;
     align-items: stretch;
     justify-content: space-between;
+/*    border: 5px solid red;*/;
+}
+
+.row-side {
+    display: flex;
+    justify-content: space-between;
+    align-items: stretch;
 /*    border: 5px solid red;*/
+    min-height: 40rem;
 }
 
 .header-logo {
@@ -32,39 +44,14 @@ h1 {
     content: url('../images/icons8-wrench.gif');
 }*/
 
-/* button-menu BEG */
-.button-menu {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    align-items: center;
-    padding: 2rem;
-    background-color: lightcyan;
-    gap: 3rem;
-}
 
-.button-menu_vertical {
-    flex-direction: column;
-}
-
-.button-menu__item {
-    border: .3rem solid transparent;
-    border-radius: 0.5rem 1rem 0.5rem;
-    width: clamp(8rem, 12rem, 20rem);
-    height: 6rem;
-    cursor: pointer;
-
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-.button-menu__item:hover {
+/* hover-and-selected BEG*/
+.button_xmenu:hover {
     border-style: solid;
     border-color: buttonborder;
 }
 
-.button-menu__item_selected {
+.button_xmenu_selected {
     color: white;
     font-weight: bold;
     background-color: black;
@@ -72,37 +59,88 @@ h1 {
     border-style: double;
 }
 
-.button-menu__item_selected:hover {
+.button_hide {
+    display: none;
+/*    background-color: red;*/
+}
+
+.button_xmenu_selected:hover {
     cursor: text;
     border-color: grey;
     cursor: not-allowed;
 }
+/* hover-and-selected END*/
 
+/* button-menu BEG */
+.hmenu {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--menu-item-padding);
+    background-color: lightcyan;
+    width: 100%;
+}
+
+.hmenu__item {
+    border: .3rem solid transparent;
+    border-radius: 0.5rem 1rem 0.5rem;
+    width: clamp(8rem, 12rem, 20rem);
+    height: 6rem;
+    cursor: pointer;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.hmenu__item_short {
+    font-style: italic;
+    width: 3rem;
+}
 /* button-menu END */
+
+/* button-aside BEG */
+/*    justify-content: end;*/
+
+.smenu {
+    flex: 1;
+    width: 24rem;
+    display: flex;
+    flex-direction: column;
+/*    background-color: green;*/
+    border-width: 5px;
+    padding: var(--menu-item-padding);
+    gap: var(--menu-item-padding);
+}
+
+.smenu__item {
+    border: .3rem solid transparent;
+    border-radius: 0.5rem 1rem 0.5rem;
+    min-height: 6rem;
+
+}
+
+/* button-aside END */
 
 /* main content (r-panel) BEG */
 .r-panel {
-    width: 100%;
-    background-color: lightgreen;
-    display: flex;
-    flex-direction: column;
+    flex: 3;
+/*    background-color: lightgreen;*/
+    min-height: 100%;
+    padding: var(--menu-item-padding);
 }
 
 .r-panel__top {
-    width: 100%;
-    background-color: lightgreen;
+    background-color: transparent;
     display: flex;
     align-items: center;
 }
 
-
 .r-panel_request-text {
-    width: 100%;
-    min-width: 100%;
     min-height: 20rem;
-    flex: 1;
+    min-width: 100%;
+    max-width: 100%;
 }
-
 
 .r-panel__buttons > input[type="file"] {
     display: none;
@@ -120,7 +158,6 @@ h1 {
     cursor: pointer;
     margin: .5rem;
 }
-
 /* main content (r-panel) END */
 
 .btn-common {

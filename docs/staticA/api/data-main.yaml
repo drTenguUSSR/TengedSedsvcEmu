@@ -1,0 +1,283 @@
+common:
+    base-rel: http://intertrust.ru/cmj/sedsvc/
+
+tab-standart:
+    - id: word2pdf
+      label: конвертация word2pdf
+      info: Сервис преобразования MS Word документов в PDF/A-1 документ
+      rel: relations#word2pdf
+      content-type: "application/vnd.intertrust.cm.sedsvc+json;type=word2pdf-request"
+      request: |-
+            {
+                "doPdfValidate" : true
+            }
+      some-other: vals1
+
+    - id: svcCheckPdf
+      label: проверка pdf
+      info: Сервис проверки валидности PDF по спецификации PDF/A-1 и извлечение координат штампов
+      rel: relations#checkPdf
+      content-type: "application/vnd.intertrust.cm.sedsvc+json;type=svcCheckPdf-request"
+      request: |-
+            {
+                skipPDFA1check : true
+            }
+      some-other: vals2
+
+    - id: svcOverPrintPdf
+      label: Сервис для наложения png файлов на указанные координаты заданного размера.
+      info: |-
+        Сервис предназначен для наложения png файлов на заданные координаты.
+        Сервис может работать как с pdf документом, так и любым форматом совместимым с LibreOffice. Сервис является синхронным
+      rel: relations#overPrintPdf
+      content-type: "application/vnd.intertrust.cm.sedsvc+json;type=svcOverPrintPdf-request"
+      request: |-
+            {
+              "pdfFileName": "simple-pdf-example-a.pdf",
+              "stampInfos": [
+                {
+                  "pngFileName": "ok.png",
+                  "pageNum": 1,
+                  "topLeft_x": 82,
+                  "topLeft_y": 31,
+                  "height": 5,
+                  "width": 65
+                },
+                {
+                  "pngFileName": "ok2.png",
+                  "pageNum": 1,
+                  "topLeft_x": 88,
+                  "topLeft_y": 119,
+                  "height": 24,
+                  "width": 69
+                }
+              ],
+              "isPdf":true
+            }
+      some-other: vals3
+      fileA:
+        info: выберите pdf-файл
+        extensions: .pdf
+      fileB:
+        info: выберите png-файлы для наложения
+        multiple: true
+        extensions: .png
+
+    - id: svcPdf2PdfA
+      label: конвертации pdf в формат pdf\A и наложение png-штампов
+      info: |-
+            Сервис предназначен конвертации в pdf\A с дальнейшим наложением штампа.
+            Сервис является синхронным
+      rel: relations#Pdf2PdfA
+      content-type: "application/vnd.intertrust.cm.sedsvc+json;type=svcPdf2PdfA-request"
+      request: |-
+            {
+                "pdfFileName": "simple-pdf-example-a.pdf",
+                "stampInfos": [
+                    {
+                        "pngFileName": "ok.png",
+                        "pageNum": 1,
+                        "topLeft_x": 82,
+                        "topLeft_y": 31,
+                        "height": 5,
+                        "width": 65
+                    },
+                    {
+                        "pngFileName": "ok2.png",
+                        "pageNum": 1,
+                        "topLeft_x": 88,
+                        "topLeft_y": 119,
+                        "height": 24,
+                        "width": 69
+                    }
+                ]
+            }
+      some-other: vals4
+      fileA:
+        info: выберите pdf-файл
+        extensions: .pdf
+      fileB:
+        info: выберите png-файлы для наложения
+        multiple: true
+        extensions: .png
+
+    - id: svcRegSignStamp
+      label: Сервис для создания штампов регистрации и подписи
+      info: |-
+                Сервис предназначен для png файлов для штампов регистрации и подписи.
+                При создании файлов используется 2 алгоритма
+
+                - добавление данных в шаблонный файл png. Размер штампа такой-же как у шаблона.
+
+                - генерация "на ходу" штампа с использованием файла png с гербом. Размер штампа задается параметрами в конфиге Конфигурация сервисов
+
+                Сервис является синхронным
+      rel: relations#makeRegSignStamp
+      content-type: "application/vnd.intertrust.cm.sedsvc+json;type=svcRegSignStamp-request"
+      request: |-
+                {
+                     "regStampDatas":[
+                                {
+                                   "id":"test-reg",
+                                   "height":100,
+                                   "width":400,
+                                   "date":"2016-05-10",
+                                   "number":"3333-333-34",
+                                   "font":"Times New Roman",
+                                   "fontSize":15,
+                                   "extData":{"signer":"Сазонова П.Я."},
+                                   "custProfile":"profile-80150914"
+                                }
+                     ],
+                      "signStampDatas":[
+                                {
+                                   "id":"test-sign",
+                                   "height":25,
+                                   "width":70,
+                                   "certificate":"01245875458",
+                                   "signer":"Иванов Иван Иванович",
+                                   "validFrom":"2016-01-05",
+                                   "validTo":"2017-01-05",
+                                   "custProfile":"profile-80150914",
+                                   "extData":{
+                                               "regDate":"2018-12-22",
+                                               "inventoryBelongToFile":"1-П",
+                                                "idAuthor":"Филиппов П.П. Начальник"
+                                                }
+                                }
+                     ],
+                     "simpleSignStampDatas":[
+                                      {
+                                         "id":"test-sign",
+                                         "height":25,
+                                         "width":70,
+                                         "signer":"Иванов Иван Иванович",
+                                         "date":"2016-01-05"
+                                      }
+                     ],
+                     "simpleRegStampDatas":[
+                            {
+                                "id":"sim-reg-001",
+                                "width":50,
+                                "height":25,
+                                "text": "MS1saW5lLTEKMi1saW5lLdGA0YPRgdGBLdGP0Y/RjzIKMy1saW5lLTMtRU9G"
+                            }
+                        ]
+                }
+      some-other: vals5
+
+    - id: svcMakeBarcode
+      label: Сервис для создания файла(ов) изобржений штрих кода.
+      info: Сервис предназначен для создания файла(ов) изображения штрих кода. Сервис является синхронным
+      rel: relations#makeBarCode
+      content-type: "application/vnd.intertrust.cm.sedsvc+json;type=svcMakeBarCode-request"
+      request: |-
+        {
+              "stampDatas":[
+                {
+                  "id":"test",
+                  "text":"68c95144758c11e98f9e2a86e4085a59",
+                  "width":200,
+                  "height":100,
+                  "type":"code128",
+                  "format":"png",
+                  "pack":true,
+                  "showText":true,
+                  "additionText":"Доп текст для отображения"
+                }
+              ]
+        }
+      some-other: vals6
+
+
+
+    - id: namespacePrefixFixup
+      label: Сервис исправления префикса пространства имен для xml файла
+      info: |
+        сервис предназначен замены префикса пространства имен в xml файле.
+
+        сервис является синхронным
+      rel: relations#namespacePrefixFixup
+      content-type: "application/vnd.intertrust.cm.sedsvc+json;type=svcNamespacePrefixFixup-request"
+      request: |-
+        {
+         "namespaces":{
+                   "http://www.infpres.com/IEDMS":"xdms"
+            }
+        }
+      some-other: vals7
+      fileA:
+        info: выберите xml для обработки
+        extensions: .xml
+###################################################################################################
+tab-extend:
+    - id: svcPassportConvertA
+      label: МЭДО формат 2.5+ в 2.7
+      info: |
+        Сервис предназначен для конвертации xml
+        паспорта 2.7 и контейнера 1.0 в паспорт 2.5 + файл с дополнительными данными
+        Сервис является синхронным
+      rel: relations#passportConvert
+      content-type: "application/vnd.intertrust.cm.sedsvc+json;type=svcConvertPassport-request"
+      request: |-
+        {
+          "passportDatas": [
+            {
+              "src": {
+                "version": "2.5",
+                "type": "passport",
+                "charset":"windows-1251"
+              },
+              "target": {
+                "version": "1.0",
+                "type": "container",
+                "charset":"windows-1251"
+              },
+              "passportFile": "document.xml",
+              "extDataFile": "addition_data.json"
+            }
+          ]
+        }
+      some-other: ext-1
+      fileA:
+        info: выберете файл паспорта (document.xml)
+        extensions: .xml
+      fileB:
+        info: выберите дополнительный файл (addition_data.json)
+        extensions: .json
+
+    - id: svcPassportConvertB
+      label: МЭДО формат 2.7 в 2.5+
+      info: |
+        Сервис предназначен для конвертации xml
+        паспорта 2.7 и контейнера 1.0 в паспорт 2.5 + файл с дополнительными данными
+        Сервис является синхронным
+      rel: relations#passportConvert
+      content-type: "application/vnd.intertrust.cm.sedsvc+json;type=svcConvertPassport-request"
+      request: |-
+        {
+          "passportDatas": [
+            {
+              "src": {
+                "version": "1.0",
+                "type": "container",
+                "charset":"windows-1251"
+              },
+              "target": {
+                "version": "2.5",
+                "type": "passport",
+                "charset":"windows-1251"
+              },
+              "passportFile": "passport.xml",
+              "extDataFile": "document.xml",
+              "extFileFormat":"xml"
+            }
+          ]
+        }
+      some-other: ext-2
+      fileA:
+        info: passportFile - выберете файл описания транспортного конейнера 1.0 (passport.xml)
+        extensions: .xml
+      fileB:
+        info: extDataFile - выберите файл паспорта сообщния МЭДО 2.7 (document.xml)
+        extensions: .xml

@@ -18,35 +18,40 @@
   <!-- class="button-menu" -->
   <!-- style="display: flex; justify-content: space-between;" -->
   <!-- class="button-menu11" -->
-  <header class="row-block">
+  <header class="row-header">
     <div class="header-logo">
         <img src="images/site-logo.gif" alt="site-logo" width="50" height="50">
         <h2>SedSvcEmu</h2>
     </div>
-    <nav id="menu-top" class="button-menu"> 
-       <button id="tab-standart" class="button-menu__item" onclick="clickTopMenu(event)">standart</button>
-       <button id="tab-extend" class="button-menu__item" onclick="clickTopMenu(event)">extend</button>
-       <button id="tab-special-a" class="button-menu__item" onclick="clickTopMenu(event)">special-a</button>
-       <button id="tab-special-b" class="button-menu__item" onclick="clickTopMenu(event)">special-b</button>
-       <button id="tab-config" class="button-menu__item" onclick="clickTopMenu(event)">config</button>
+    <nav id="menu-top" class="hmenu"> 
+       <button id="tab-standart" class="hmenu__item button_xmenu" onclick="clickTopMenu(event)">standart</button>
+       <button id="tab-extend" class="hmenu__item button_xmenu" onclick="clickTopMenu(event)">extend</button>
+       <button id="tab-special-a" class="hmenu__item button_xmenu" onclick="clickTopMenu(event)">special-a</button>
+       <button id="tab-special-b" class="hmenu__item button_xmenu" onclick="clickTopMenu(event)">special-b</button>
+       <button id="q-version" class="hmenu__item button_xmenu hmenu__item_short" onclick="clickTopMenu(event)">ver</button>
+       <button id="q-log" class="hmenu__item button_xmenu hmenu__item_short" onclick="clickTopMenu(event)">log</button>
    </nav>
 </header>
 
-<div class="row-block">
-    <aside id="menu-cmd" class="button-menu button-menu_vertical">
-       <button id="cmd-stamp" class="button-menu__item" onclick="clickCmdMenu(event)">stamp</button>
-       <button id="cmd-pdf" class="button-menu__item" onclick="clickCmdMenu(event)">pdf</button>
-       <button id="cmd-over" class="button-menu__item" onclick="clickCmdMenu(event)">over</button>
+<div class="row-side">
+    <aside id="menu-cmd" class="smenu">
+       <button id="cmd-stamp" class="smenu__item button_xmenu" onclick="clickCmdMenu(event)">stamp</button>
+       <button id="cmd-pdf" class="smenu__item button_xmenu" onclick="clickCmdMenu(event)">
+        Lorem ipsum dolor sit amet consectetur adipisicing elit. Eos dignissimos, nihil molestias quia sunt, 
+        voluptate mollitia provident obcaecati eveniet recusandae architecto nisi consequatur corporis 
+        officiis aspernatur beatae voluptatum laboriosam minus!
+       </button>
+       <button id="cmd-over1" class="smenu__item button_xmenu" onclick="clickCmdMenu(event)">
+        Сервис для наложения png файлов на указанные координаты заданного размера
+        </button>
    </aside>
    <main class="r-panel">
-    
     <div class="r-panel__top">
         form action:
         <button id="form-action" class="btn-common" onclick="showActionDialog()">
             http://localhost:8070/ext-sedsvc/upload-m/?command=svcCheckPdf
         </button>
     </div>
-
     <!-- action="http://localhost:8070/ext-sedsvc/upload-m/?command=svcMakeStamp" -->
     <form id="example-request" 
        action="http://localhost:8070/ext-sedsvc/upload-m/?command=svcCheckPdf"
@@ -77,10 +82,6 @@
         <label id="fileCinputLabel" for="fileCinput" class="r-panel__btn-label">extenC</label>
         <span id="fileCinputInfo"></span>
         <input type="file" id="fileCinput" form="example-request" name="file" multiple="multiple">
-        <hr>
-        <button type="button" class="btn-common" onclick="clickFiles(event)" >test FileInfo(A,B,C)</button>
-        <button type="button" class="btn-common" onclick="testYamlLoad(event)">test ParseYaml</button>
-        <hr>
         <input type="submit" form="example-request" class="btn-common" value="выполнить запрос формы">
         <input type="reset" form="example-request" class="btn-common" value="сброс формы" onClick="exampleRequestReset(event)">
     </div>
@@ -96,14 +97,20 @@
       <input id="formActionUrl" type="text" autocomplete=off size=60>
     </p>
     <div>
-      <button class="btn-common" value="x-reset">сброс</button>
-      <button class="btn-common" value="x-cancel">отмена</button>
-      <button class="btn-common" value="x-confirm">подтвердить</button>
+      <button class="btn-common" value="x-reset">Сброс</button>
+      <button class="btn-common" value="x-cancel">Отмена</button>
+      <button class="btn-common" value="x-confirm">Подтвердить</button>
     </div>
   </form>
 </dialog>
 
-<footer> (c) drTengu &#x1f47a;, 2024 &#129489;&#8205;&#128295; </footer>
+<footer> (c) drTengu &#x1f47a;, 2024 &#129489;&#8205;&#128295;
+    <hr>
+        <button type="button" class="btn-common" onclick="testQueryTopElements(event)" >test QueryTopElements</button>
+    <hr>
+        <button type="button" class="btn-common" onclick="testFilesInfo(event)" >test FileInfo(A,B,C)</button>
+        <button type="button" class="btn-common" onclick="testYamlLoad(event)">test ParseYaml</button>
+</footer>
 </body>
 
 <script type="text/javascript">
