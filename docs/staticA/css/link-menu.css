@@ -42,7 +42,7 @@ a.link-menu__item_selected:hover {
     border-color: grey;
 }
 
-link-menu_vertical {
+.link-menu_vertical {
     flex-direction: column;
 }
 /*link-menu END */
