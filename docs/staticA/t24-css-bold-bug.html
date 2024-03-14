@@ -16,26 +16,14 @@
 </head>
 <body>
 
-<div class="row-side">
-    <aside id="menu-cmd" class="smenu">
-       <button id="cmd-stamp" class="smenu__item button_xmenu" onclick="clickCmdMenu(event)">stamp</button>
-       <button id="cmd-pdf" class="smenu__item button_xmenu" onclick="clickCmdMenu(event)">
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Eos dignissimos, nihil molestias quia sunt, 
-        voluptate mollitia provident obcaecati eveniet recusandae architecto nisi consequatur corporis 
-        officiis aspernatur beatae voluptatum laboriosam minus!
-       </button>
-       <button id="cmd-over1" class="smenu__item button_xmenu" onclick="clickCmdMenu(event)">
-        Сервис для наложения png файлов на указанные координаты заданного размера
-        </button>
-   </aside>
    <main class="r-panel">
     <div class="r-panel__top">
-        form action:
+        form action f01:
         <button id="form-action" class="btn-common" onclick="showActionDialog()">
             http://localhost:8070/ext-sedsvc/upload-m/?command=svcCheckPdf
         </button>
     </div>
-    <!-- action="http://localhost:8070/ext-sedsvc/upload-m/?command=svcMakeStamp" -->
+
     <form id="example-request" 
        action="http://localhost:8070/ext-sedsvc/upload-m/?command=svcCheckPdf"
        method="POST" enctype="multipart/form-data">
@@ -45,36 +33,7 @@
         <hr>
 
     </form>
-    <textarea id="request-text" form="example-request" 
-       class="r-panel_request-text" name="mainData" required minLength="10">
-{
-
-    "skipPDFA1check" : true
-}
-    </textarea>
-
-    <div class="r-panel__buttons">
-
-        <label id="fileAinputLabel" for="fileAinput" class="r-panel__btn-label">Passport file</label>
-        <span id="fileAinputInfo"></span>
-        <input type="file" id="fileAinput" form="example-request" name="file" multiple="multiple">
-        <br>
-        <label id="fileBinputLabel" for="fileBinput" class="r-panel__btn-label">Addition-data file</label>
-        <span id="fileBinputInfo"></span>
-        <input type="file" id="fileBinput" form="example-request" name="file" multiple="multiple">
-        <br>
-        <label id="fileCinputLabel" for="fileCinput" class="r-panel__btn-label">extenC3</label>
-        <span id="fileCinputInfo"></span>
-        <input type="file" id="fileCinput" form="example-request" name="file" multiple="multiple">
-
-        <br>
-        <input type="submit" form="example-request" class="r-panel__btn-label" value="выполнить запрос формы">
-        <input type="reset" form="example-request" class="r-panel__btn-label" value="сброс формы" onClick="exampleRequestReset(event)">
-
-    </div>
-
     </main>
-</div>
 
 </body>
 
