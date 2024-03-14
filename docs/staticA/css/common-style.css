@@ -151,6 +151,7 @@ h1 {
 }
 
 .r-panel__btn-label {
+    font-weight: normal;
     border: 1px solid black;
     background-color: #ccc;
     display: inline-block;
