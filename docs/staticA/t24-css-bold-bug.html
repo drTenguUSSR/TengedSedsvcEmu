@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>t24-css-bold-bug 07</title>
+    <title>t24-css-bold-bug 08</title>
 
     <link rel="icon" sizes="50x50" type="image/gif" href="images/icons8-wrench.gif">
     <link rel="stylesheet" type="text/css" href="css/t24-common-style.css">
@@ -18,7 +18,7 @@
 
    <main class="r-panel">
     <div class="r-panel__top">
-        form action 07:
+        form action 08:
         <button id="form-action" class="btn-common" onclick="showActionDialog()">
             http://localhost:8070/ext-sedsvc/upload-m/?command=svcCheckPdf
         </button>
@@ -33,33 +33,6 @@
         <hr>
 
     </form>
-    <textarea id="request-text" form="example-request" 
-       class="r-panel_request-text" name="mainData" required minLength="10">
-{
-
-    "skipPDFA1check" : true
-}
-    </textarea>
-
-    <div class="r-panel__buttons">
-
-        <label id="fileAinputLabel" for="fileAinput" class="r-panel__btn-label">Passport file</label>
-        <span id="fileAinputInfo"></span>
-        <input type="file" id="fileAinput" form="example-request" name="file" multiple="multiple">
-        <br>
-        <label id="fileBinputLabel" for="fileBinput" class="r-panel__btn-label">Addition-data file</label>
-        <span id="fileBinputInfo"></span>
-        <input type="file" id="fileBinput" form="example-request" name="file" multiple="multiple">
-        <br>
-        <label id="fileCinputLabel" for="fileCinput" class="r-panel__btn-label">extenC3</label>
-        <span id="fileCinputInfo"></span>
-        <input type="file" id="fileCinput" form="example-request" name="file" multiple="multiple">
-
-        <br>
-        <input type="submit" form="example-request" class="r-panel__btn-label" value="выполнить запрос формы">
-        <input type="reset" form="example-request" class="r-panel__btn-label" value="сброс формы" onClick="exampleRequestReset(event)">
-
-    </div>
 
     </main>
 
