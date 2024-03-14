@@ -131,9 +131,7 @@ h1 {
 }
 
 .r-panel__top {
-    font-weight: normal;
-/*    background-color: transparent;*/
-    background-color: lightseagreen;
+    background-color: transparent;
     display: flex;
     align-items: center;
 }
