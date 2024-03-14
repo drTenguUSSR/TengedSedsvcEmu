@@ -59,7 +59,7 @@ h1 {
     border-style: double;
 }
 
-.button_hide {
+.block_hide {
     display: none;
 /*    background-color: red;*/
 }
@@ -78,7 +78,7 @@ h1 {
     justify-content: space-between;
     align-items: center;
     padding: var(--menu-item-padding);
-    background-color: lightcyan;
+/*    background-color: lightcyan;*/
     width: 100%;
 }
 
@@ -142,7 +142,7 @@ h1 {
     max-width: 100%;
 }
 
-.r-panel__buttons > input[type="file"] {
+.r-panel__buttons div input[type="file"] {
     display: none;
 }
 

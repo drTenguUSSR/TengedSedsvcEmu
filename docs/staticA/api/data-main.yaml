@@ -2,7 +2,7 @@ common:
     base-rel: http://intertrust.ru/cmj/sedsvc/
 
 tab-standart:
-    - id: word2pdf
+    - id: cmd-word2pdf
       label: конвертация word2pdf
       info: Сервис преобразования MS Word документов в PDF/A-1 документ
       rel: relations#word2pdf
@@ -12,8 +12,11 @@ tab-standart:
                 "doPdfValidate" : true
             }
       some-other: vals1
+      fileA:
+        info: выберите doc-файл
+        extensions: .doc,.docx,.rtf
 
-    - id: svcCheckPdf
+    - id: cmd-svcCheckPdf
       label: проверка pdf
       info: Сервис проверки валидности PDF по спецификации PDF/A-1 и извлечение координат штампов
       rel: relations#checkPdf
@@ -23,8 +26,11 @@ tab-standart:
                 skipPDFA1check : true
             }
       some-other: vals2
+      fileA:
+          info: выберите pdf-файл
+          extensions: .pdf
 
-    - id: svcOverPrintPdf
+    - id: cmd-svcOverPrintPdf
       label: Сервис для наложения png файлов на указанные координаты заданного размера.
       info: |-
         Сервис предназначен для наложения png файлов на заданные координаты.
@@ -63,7 +69,7 @@ tab-standart:
         multiple: true
         extensions: .png
 
-    - id: svcPdf2PdfA
+    - id: cmd-svcPdf2PdfA
       label: конвертации pdf в формат pdf\A и наложение png-штампов
       info: |-
             Сервис предназначен конвертации в pdf\A с дальнейшим наложением штампа.
@@ -101,7 +107,7 @@ tab-standart:
         multiple: true
         extensions: .png
 
-    - id: svcRegSignStamp
+    - id: cmd-svcRegSignStamp
       label: Сервис для создания штампов регистрации и подписи
       info: |-
                 Сервис предназначен для png файлов для штампов регистрации и подписи.
@@ -166,7 +172,7 @@ tab-standart:
                 }
       some-other: vals5
 
-    - id: svcMakeBarcode
+    - id: cmd-svcMakeBarcode
       label: Сервис для создания файла(ов) изобржений штрих кода.
       info: Сервис предназначен для создания файла(ов) изображения штрих кода. Сервис является синхронным
       rel: relations#makeBarCode
@@ -191,7 +197,7 @@ tab-standart:
 
 
 
-    - id: namespacePrefixFixup
+    - id: cmd-namespacePrefixFixup
       label: Сервис исправления префикса пространства имен для xml файла
       info: |
         сервис предназначен замены префикса пространства имен в xml файле.
@@ -211,7 +217,7 @@ tab-standart:
         extensions: .xml
 ###################################################################################################
 tab-extend:
-    - id: svcPassportConvertA
+    - id: cmd-svcPassportConvertA
       label: МЭДО формат 2.5+ в 2.7
       info: |
         Сервис предназначен для конвертации xml
@@ -246,7 +252,7 @@ tab-extend:
         info: выберите дополнительный файл (addition_data.json)
         extensions: .json
 
-    - id: svcPassportConvertB
+    - id: cmd-svcPassportConvertB
       label: МЭДО формат 2.7 в 2.5+
       info: |
         Сервис предназначен для конвертации xml

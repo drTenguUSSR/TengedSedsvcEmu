@@ -1,7 +1,7 @@
 'use strict';
 
-const menuTop=document.getElementById("menu-top")
-const menuCmd=document.getElementById("menu-cmd")
+const menuTop = document.getElementById("menu-top")
+const menuCmd = document.getElementById("menu-cmd")
 const menuClassSelected="button_xmenu_selected"
 const requestType=document.getElementById("request-type")
 const requestText=document.getElementById("request-text")
@@ -13,10 +13,11 @@ const fileCinputFile=document.getElementById("fileCinput")
 fileCinputFile.info="fileCinputInfo"
 
 function domReady() {
-    console.log('DOMready');
-    fileAinputFile.addEventListener("change", fileChanges);
-    fileBinputFile.addEventListener("change", fileChanges);
-    fileCinputFile.addEventListener("change", fileChanges);
+    console.log('DOMready')
+    fileAinputFile.addEventListener("change", fileChanges)
+    fileBinputFile.addEventListener("change", fileChanges)
+    fileCinputFile.addEventListener("change", fileChanges)
+    simOnload()
 }
 
 
@@ -41,37 +42,6 @@ function fileChanges(fileInput) {
     console.log("fileChanges-end")
 }
 
-function buttonsRefresh(event, menuRoot) {
-    const selectedId=event.target.id;
-    console.log("click on ["+selectedId+"]");
-    for(const sel of menuRoot.children) {
-        if (sel.id==selectedId) {
-            if (!sel.classList.contains(menuClassSelected)) {
-                sel.classList.add(menuClassSelected);
-            }
-            sel.disabled=true
-        } else {
-            if (sel.classList.contains(menuClassSelected)) {
-                sel.classList.remove(menuClassSelected);
-            }
-            sel.disabled=false
-        }
-    }
-}
-
-function clickTopMenu(event) {
-    buttonsRefresh(event,menuTop)
-}
-
-function clickCmdMenu(event) {
-    //read: requestText.value
-    buttonsRefresh(event,menuCmd)
-    const id=event.target.id;
-    const text=`{
-some text ${id} 3
-    }`;
-}
-
 function fileCfgInfo(fileLabel, fileData) {
     let result=`fileUse: ${fileLabel}:`+" info: "
     + fileData.info
@@ -93,135 +63,163 @@ function exampleRequestResetSub(label) {
     elInf.innerText="";
 }
 
-//======================== mainFunc section
-function testYamlLoad(event) {
-    //topMenuInfo()
-    console.log("testYamlLoad-beg")
-    //const resultX=testYamlLoadSubA()
-    const resultX=testYamlLoad_2()
-    console.log("testYamlLoad-end")
-}
-
-async function testYamlLoad_2() {
-    const response=await fetch("api/data-main.yaml")
-    const dataText=await response.text()
-    const ydoc = jsyaml.load(dataText);
-    const baseRel=ydoc.common['base-rel']
-    console.log("baseRel=["+baseRel+"]")
-
-    //selTab - выбранная вкладка из topMenu, содержит массив
-    const selTab = ydoc['tab-standart']
-    console.log("prop-beg")
-    
-    let tLabel=""
-    let tLen=0
-    //selSvc - описание конкретного сервиса
-    for(const selSvc of selTab) {
-        console.log("---")
-        console.log("svc.id="+selSvc.id)
-        console.log("svc.rel=!"+selSvc.rel+"!")
-        console.log("request["+selSvc.request+"]")
-        console.log("last=!"+selSvc['some-other']+"!")
-        const xLabel=selSvc.label
-        if(xLabel.length > tLen) {
-            tLabel=xLabel
-            tLen=tLabel.length
-        }
-        if ('fileA' in selSvc) {
-            console.log(fileCfgInfo('fileA',selSvc.fileA))
-        }
-        if ('fileB' in selSvc) {
-            console.log(fileCfgInfo('fileB',selSvc.fileB))
+//====================== simOnLoad common functions
+function buttonsRefresh(selectedId, menuRoot) {
+    console.log("click on ["+selectedId+"]");
+    for(const sel of menuRoot.children) {
+        if (sel.id==selectedId) {
+            if (!sel.classList.contains(menuClassSelected)) {
+                sel.classList.add(menuClassSelected);
+            }
+            sel.disabled=true
+        } else {
+            if (sel.classList.contains(menuClassSelected)) {
+                sel.classList.remove(menuClassSelected);
+            }
+            sel.disabled=false
         }
     }
-
-    console.log("prop-end")
-    console.log(`max: ${tLabel}, len=${tLen}`)
-
-    return "xx1"
 }
-
-async function testYamlLoad_1() {
-    const response=await fetch("api/data-a.yaml")
-    console.log("status="+response.status)
-    const dataText=await response.text()
-    let ydoc = jsyaml.load(dataText);
-    console.log(ydoc)
-    console.log("text=["+ydoc.dat1.dat2.fieldA+"]")
-    console.log(typeof ydoc.dat2)
-    console.log("dat5:")
-    console.log(ydoc.dat5)
-    console.log(typeof ydoc.dat5)
-    console.log("!["+ydoc.dat4+"]!")
-
-    console.log("prop-beg")
-    for(const prop in ydoc.port_mapping) {
-        console.log(`prop !${prop}! is !${ydoc.port_mapping[prop]}!`)
-    }
-    console.log("prop-end")
-
-    return "xx1"
-}
-
-//========================
-function testQueryTopElements(event) {
-    console.log("testQueryTopElements-beg")
-    const filter = '[id^="tab-"]'
-    console.log(`filter:!${filter}!`)
-    const topAllBtn=menuTop.querySelectorAll(filter)
-    console.log(topAllBtn)
-    for(var elButton of topAllBtn) {
-        let bName=elButton.innerText
-        console.log(`id:${elButton.id} bName:${bName}`)
-    }
-    console.log("testQueryTopElements-end")
-}
-
-//========================
+//====================== simOnload
 const filterTopMenuButtons='[id^="tab-"]'
-const button_hide="button_hide"
+const filterCmdMenuButtons='[id^="cmd-"]'
+const block_hide="block_hide"
+const cfgPath = "api/data-main.yaml"
+let loadedConfig
+let selectedTopSection
 
-function testLoadYamlAndHideTop(event) {
-    console.log("testLoadYamlAndHideTop-beg")
+async function simOnload() {
+    console.log("simOnload-beg/001")
+    console.log(`cfg ${cfgPath}. load and parse`)
+    const ydoc= await simOnload_parseCfg(cfgPath)
+    const baseRel=ydoc.common['base-rel']
+    console.log(`done. baseRel=[${baseRel}]`)
+
+    processTopMenu(ydoc)
+    clearAside()
+
+    loadedConfig=ydoc
+    console.log("simOnload-end")
+}
+
+async function simOnload_parseCfg(filePath) {
+    const response=await fetch(filePath)
+    const dataText=await response.text()
+    const ydoc = jsyaml.load(dataText)
+    return ydoc
+}
+
+function processTopMenu(ydoc) {
     const topAllBtnEl=menuTop.querySelectorAll(filterTopMenuButtons)
     const topAllBtnId = new Set()
+
     for(const elButtonEl of topAllBtnEl) {
         topAllBtnId.add(elButtonEl.id)
     }
-    console.log("topTab:"+Array.from(topAllBtnId).join(","))
-    testLoadYamlAndHideTop_s(topAllBtnEl,topAllBtnId)
-    console.log("testLoadYamlAndHideTop-end")
-}
-
-async function testLoadYamlAndHideTop_s(topAllBtnEl,topAllBtnId) {
-    const response=await fetch("api/data-main.yaml")
-    const dataText=await response.text()
-    let ydoc = jsyaml.load(dataText);
-    const baseRel=ydoc.common['base-rel']
-    console.log("baseRel=["+baseRel+"]")
+    console.log("topTab-all:"+Array.from(topAllBtnId).join(","))
 
     const hideSect = new Set(topAllBtnId)
     for(const sect in ydoc) {
-        console.log(`file-sect: ${sect}`)
+        console.log(`cfg: found section: ${sect}`)
         hideSect.delete(sect)
     }
     console.log("hideSect list:"+Array.from(hideSect).join(","))
     const childs=menuTop.childNodes
     for(const elButtonEl of topAllBtnEl) {
-        //topAllBtnId.add(elButtonEl.id)
-        console.log(`hiding id=${elButtonEl.id} check=${hideSect.has(elButtonEl.id)}`)
+        let toHide = false
         if (hideSect.has(elButtonEl.id)) {
-            elButtonEl.classList.add(button_hide)
+            elButtonEl.classList.add(block_hide)
+            toHide=true
         }
+        console.log(` id=${elButtonEl.id} check=${hideSect.has(elButtonEl.id)} toHide=${toHide}`)
     }
-    console.log("_s end")
-    return "xx1"
+    console.log("processTopMenu done")
 }
-//======================== selFiles section
-function testFilesInfo(event) {
-    console.log("clickFiles-BEG")
-    console.log(fileAinputFile.files)
-    console.log(fileBinputFile.files)
-    console.log(fileCinputFile.files)
-    console.log("clickFiles-END")
+
+function clearAside() {
+    const cmdAllBtnEl=menuCmd.querySelectorAll(filterCmdMenuButtons)
+    console.log("clearAside: toClear"+Array.from(cmdAllBtnEl).join(","))
+    for(const elCmd of cmdAllBtnEl) {
+        elCmd.remove()
+    }
+    console.log("clearAside done")
+}
+//================= sim: process topMenuClick
+function clickTopMenu(event) {
+    const selectedId=event.target.id
+    selectedTopSection = selectedId
+    buttonsRefresh(selectedId,menuTop)
+    console.log("eventId="+selectedId)
+    clearAside()
+
+    const cfgAsideList=loadedConfig[selectedId]
+
+    for( const cfgCmd of cfgAsideList) {
+        console.log(`- id:${cfgCmd.id}`)
+        const cmdButton = document.createElement('button')
+        cmdButton.id = cfgCmd.id
+        cmdButton.innerText = cfgCmd.label
+        cmdButton.classList.add("smenu__item")
+        cmdButton.classList.add("button_xmenu")
+        cmdButton.onclick = clickCmdMenu
+        menuCmd.appendChild(cmdButton)
+    }
+    console.log("clickTopMenu done")
+}
+
+//================= sim: clickCmdMenu
+function clickCmdMenu(event) {
+    const selectedId=event.target.id
+    console.log(`clickCmdMenu: ${selectedId} in sect: ${selectedTopSection}`)
+    buttonsRefresh(selectedId,menuCmd)
+    const cfgSection = loadedConfig[selectedTopSection]
+
+    const cfgCmd = cfgSection.find(obj => obj.id === selectedId)
+    console.log("found-cmd:")
+    console.log(cfgCmd)
+
+    clickCmdMenuFiller(cfgCmd)
+}
+
+function clickCmdMenuFiller(cfgCmd) {
+    clickCmdMenuFillerRequest(cfgCmd)
+    clickCmdMenuFillerFile("fileA",cfgCmd)
+    clickCmdMenuFillerFile("fileB",cfgCmd)
+    clickCmdMenuFillerFile("fileC",cfgCmd)
+}
+
+function clickCmdMenuFillerRequest(cfgCmd) {
+    const elRequestText = document.getElementById("request-text")
+    const elContentType = document.getElementById("request-type")
+    elRequestText.value = cfgCmd.request
+    elContentType.value = cfgCmd['content-type']
+    console.log(cfgCmd['content-type'])
+}
+
+function clickCmdMenuFillerFile(prefix,cfgCmd) {
+    const suffixBlock="block"
+    const suffixLabel="inputLabel"
+    const suffixInfo="inputInfo"
+    const suffixFile="input"
+
+    const elBlock = document.getElementById(prefix+suffixBlock)
+    const elLabel = document.getElementById(prefix+suffixLabel)
+    const elInfo = document.getElementById(prefix+suffixInfo)
+    const elFile = document.getElementById(prefix+suffixFile)
+    if (cfgCmd.hasOwnProperty(prefix)) {
+        console.log("prop "+prefix+" found")
+        elBlock.classList.remove(block_hide)
+        elLabel.innerText = cfgCmd[prefix].info
+        elFile.accept =(cfgCmd[prefix].hasOwnProperty('extensions'))?cfgCmd[prefix].extensions:""
+        const allowMultiple = cfgCmd[prefix].hasOwnProperty('multiple') && cfgCmd[prefix].multiple
+        if (allowMultiple) {
+            elFile.setAttribute("multiple","")
+        } else {
+            elFile.removeAttribute("multiple")
+        }
+    } else {
+        console.log("prop "+prefix+" miss")
+        elBlock.classList.add(block_hide)
+    }
+
 }
