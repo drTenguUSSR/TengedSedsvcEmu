@@ -125,15 +125,17 @@ h1 {
 /* main content (r-panel) BEG */
 .r-panel {
     flex: 3;
+    display: flex;
+    flex-direction: column;
 /*    background-color: lightgreen;*/
     min-height: 100%;
-    padding: var(--menu-item-padding);
+/*    padding: var(--menu-item-padding);*/
+    background-color: transparent;
+    align-items: flex-start;
 }
 
 .r-panel__top {
-    background-color: transparent;
-    display: flex;
-    align-items: center;
+/*    background-color: lightcyan;*/
 }
 
 .r-panel_request-text {
@@ -142,12 +144,8 @@ h1 {
     max-width: 100%;
 }
 
-.r-panel__buttons div input[type="file"] {
+.r-panel div[id^=file] input[type=file] {
     display: none;
-}
-
-.r-panel__buttons {
-    display: inline;
 }
 
 .r-panel__btn-label {

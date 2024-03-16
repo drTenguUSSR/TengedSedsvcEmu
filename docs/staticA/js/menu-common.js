@@ -1,5 +1,8 @@
 'use strict';
 
+let entryPoint = ""
+let entryData = ""
+
 const menuTop = document.getElementById("menu-top")
 const menuCmd = document.getElementById("menu-cmd")
 const menuClassSelected="button_xmenu_selected"
@@ -25,6 +28,41 @@ document.addEventListener("DOMContentLoaded", domReady);
 
 // console.log("document.readyState="+document.readyState); 
 //  => document.readyState=interactive
+
+function dialogEntryPoint(event) {
+    let currEntry = entryPoint || "http://localhost:8070/ext-sedsvc/entry-point/"
+    let res =  window.prompt("введите адрес entry point СЭДсервиса", currEntry);
+    entryPoint = res
+    console.log(`entry=${entryPoint}`)
+    let elEnt = document.getElementById("q-entry")
+    elEnt.innerHTML=`${entryPoint}`
+}
+
+function checkEntryPoint(event) {
+    console.log("checkEntryPoint-BEG")
+    if (entryPoint.length<3) {
+        alert("адрес точки доступа не указан")
+        return
+    }
+    checkEntryPointLoad(entryPoint)
+    console.log("checkEntryPoint-END")
+}
+
+async function checkEntryPointLoad(entryPoint) {
+    console.log(`entryPoint=${entryPoint}`)
+    let response = await fetch(entryPoint)
+    //,{ mode: 'no-cors'}
+    // let data2 = await response.json()
+    // console.log(JSON.stringify(data2))
+    // for( const ent of keys(data2)) {
+    //     console.log(`ent: ${ent}`)
+    // }
+    const dataText=await response.text()
+    console.log("ready-1")
+    console.log(dataText.length)
+    console.log("ready-2")
+    console.log(dataText)
+}
 
 
 function fileChanges(fileInput) {
@@ -222,4 +260,8 @@ function clickCmdMenuFillerFile(prefix,cfgCmd) {
         elBlock.classList.add(block_hide)
     }
 
+}
+
+function isNullOrUndefined(value) {
+  return value === undefined || value === null;
 }
