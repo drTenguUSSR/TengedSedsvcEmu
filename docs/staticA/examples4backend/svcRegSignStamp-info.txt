@@ -1,0 +1,26 @@
+request
+{
+  "regStampDatas":[
+             {
+                "id":"test-reg",
+                "date":"2016-05-10",
+                "number":"3333-333-34"
+             }
+  ],
+   "signStampDatas":[
+             {
+                "id":"test-sign",
+                "certificate":"12000F8147B11ED99B090F61450000000F8147",
+                "signer":"Иванов Иван Иванович",
+                "validFrom":"2016-01-05",
+                "validTo":"2017-01-05"
+             }
+
+  ]
+}
+
+result: 
+	reg:
+		width=779 px, height=58 px (h=5 mm, w=66 mm)
+	sign:
+		width=1004 px, height=437 px (h=37 mm, w=85 mm)

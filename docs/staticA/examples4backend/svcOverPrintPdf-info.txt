@@ -1,0 +1,29 @@
+request
+---
+{
+      "pdfFileName": "example-svcCheckPdf.pdf",
+      "stampInfos": [
+        {
+          "pngFileName": "svcRegSignStamp-reg.png",
+          "pageNum": 1,
+          "topLeft_x": 82,
+          "topLeft_y": 31,
+          "height": 5,
+          "width": 66
+        },
+        {
+          "pngFileName": "svcRegSignStamp-sign.png",
+          "pageNum": 1,
+          "topLeft_x": 88,
+          "topLeft_y": 119,
+          "height": 37,
+          "width": 85
+        }
+      ],
+      "isPdf":true
+}
+---
+
+
+
+

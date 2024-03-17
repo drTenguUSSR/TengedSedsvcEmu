@@ -1,0 +1,41 @@
+1. отправка example-svcCheckPdf.pdf
+
+2. ответ
+
+---
+HTTP/1.1 200 
+Content-Type: multipart/mixed;boundary=NextPart-K5kkeqYzTGtZG9UYI3QDHtDHZWam0vkOjltWaBCwYjaHRzgCC7r5PZDumef6;charset=UTF-8
+Transfer-Encoding: chunked
+Date: Sun, 17 Mar 2024 19:25:34 GMT
+Keep-Alive: timeout=20
+Connection: keep-alive
+---
+--NextPart-K5kkeqYzTGtZG9UYI3QDHtDHZWam0vkOjltWaBCwYjaHRzgCC7r5PZDumef6
+Content-Type: application/vnd.intertrust.cm.sedsvc+json;type=svcCheckPdf-response
+Content-Length: 489
+
+{
+  "checkStampInfos" : [ {
+    "fileName" : "example-svcCheckPdf.pdf",
+    "valid" : true,
+    "signStamps" : [ {
+      "pageNum" : 1,
+      "topLeft_x" : 29,
+      "topLeft_y" : 29,
+      "height" : 38,
+      "width" : 85,
+      "markerText" : "[МЕСТО ДЛЯ ПОДПИСИ]"
+    } ],
+    "regStamp" : {
+      "pageNum" : 1,
+      "topLeft_x" : 29,
+      "topLeft_y" : 38,
+      "height" : 6,
+      "width" : 66,
+      "markerText" : "[МЕСТО ДЛЯ ШТАМПА]"
+    }
+  } ]
+}
+--NextPart-K5kkeqYzTGtZG9UYI3QDHtDHZWam0vkOjltWaBCwYjaHRzgCC7r5PZDumef6
+--NextPart-K5kkeqYzTGtZG9UYI3QDHtDHZWam0vkOjltWaBCwYjaHRzgCC7r5PZDumef6--
+---

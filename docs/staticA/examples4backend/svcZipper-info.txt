@@ -1,0 +1,20 @@
+request:
+	content-type: application/vnd.intertrust.cm.sedsvc+json;type=zipper-request
+	
+{
+	"operation" : "zip",
+	"zipFileName": "some-zip-яяя.zip"
+}
+
+files:
+	svcRegSignStamp-reg.png
+	svcRegSignStamp-sign.png
+	
+result: someName.zip and 
+	{
+	  "names" : [ "some-zip-яяя.zip" ],
+	  "fileHrefLink" : [ {
+		"logicalName" : "some-zip-яяя.zip",
+		"href" : "someName.zip"
+	  } ]
+	}

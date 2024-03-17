@@ -1,0 +1,52 @@
+
+первый ответ - монитор:
+---
+HTTP/1.1 202 
+Content-Type: application/vnd.intertrust.cm.sedsvc+json;type=async-monitor;charset=UTF-8
+Content-Length: 202
+Date: Sun, 17 Mar 2024 19:07:43 GMT
+Keep-Alive: timeout=20
+Connection: keep-alive
+---
+{
+  "title" : "sedsvc monitor",
+  "entry" : [ {
+    "rel" : "#self",
+    "href" : "http://vm02:8080/sedsvc-war2/ext-sedsvc/monitor-publisher/svcWord2Pdf/dc2b1527-d382-4089-b619-204a2e26e557/fix"
+  } ]
+}
+---
+
+второй ответ - данные
+---
+HTTP/1.1 200
+Content-Type: multipart/mixed;boundary=NextPart-F8ipby3S41TMMPrw9fYZQmU6Wc8dgZhds7j8wMkBJ5TKBoJVvATsst2asPCO;charset=UTF-8
+Transfer-Encoding: chunked
+Date: Sun, 17 Mar 2024 19:16:52 GMT
+---
+--NextPart-WQQCxaqqA9ivitbZl8ll7Q6gEMbQrpLraWcEzQJu1QvbcCbzId1iXrE9NDoF
+Content-Type: application/vnd.intertrust.cm.sedsvc+json;type=word2pdf-response
+Content-Length: 186
+
+{
+  "nameConversion" : {
+    "svcWord2Pdf-docx.docx" : "svcWord2Pdf-docx.pdf"
+  },
+  "fileHrefLink" : [ {
+    "logicalName" : "svcWord2Pdf-docx.pdf",
+    "href" : "recv-0000.pdf"
+  } ]
+}
+--NextPart-WQQCxaqqA9ivitbZl8ll7Q6gEMbQrpLraWcEzQJu1QvbcCbzId1iXrE9NDoF
+Content-Type: application/pdf
+Content-Disposition: attachment; filename="recv-0000.pdf"
+Content-Length: 25464
+
+%PDF-1.4
+....
+%%EOF
+
+--NextPart-WQQCxaqqA9ivitbZl8ll7Q6gEMbQrpLraWcEzQJu1QvbcCbzId1iXrE9NDoF
+--NextPart-WQQCxaqqA9ivitbZl8ll7Q6gEMbQrpLraWcEzQJu1QvbcCbzId1iXrE9NDoF--
+
+

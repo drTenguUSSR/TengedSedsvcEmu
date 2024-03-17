@@ -35,12 +35,14 @@ const elRpanelRequestText = document.getElementById("request-text")
 const elRpanelContentType = document.getElementById("request-type")
 const elRpanelRelation = document.getElementById("request-relation")
 
-function domReady() {
+async function domReady() {
     console.log('DOMready')
     fileAinputFile.addEventListener("change", fileChanges)
     fileBinputFile.addEventListener("change", fileChanges)
     fileCinputFile.addEventListener("change", fileChanges)
-    simOnload()
+    await simOnload()
+    selectedTopSection="basic"
+    clickTopMenuForced()
 }
 
 document.addEventListener("DOMContentLoaded", domReady);
@@ -195,12 +197,19 @@ function clearAside() {
 function clickTopMenu(event) {
     const selectedId=event.target.id
     selectedTopSection = selectedId
-    buttonsRefresh(selectedId,menuTop)
-    console.log("eventId="+selectedId)
+    clickTopMenuForced()
+}
+
+function clickTopMenuForced() {
+    buttonsRefresh(selectedTopSection,menuTop)
+    console.log("eventId="+selectedTopSection)
     clearAside()
-
-    const cfgAsideList=сonfigYamlData[selectedId]
-
+    const cfgAsideList=сonfigYamlData[selectedTopSection]
+    console.log(`selectedTopSection=${selectedTopSection} cfgAsideList=${cfgAsideList}`)
+    if (cfgAsideList == undefined) {
+        console.log("cfgAsideList undef")
+        return
+    }
     for( const cfgCmd of cfgAsideList) {
         console.log(`- id:${cfgCmd.id}`)
         const cmdButton = document.createElement('button')
@@ -211,7 +220,7 @@ function clickTopMenu(event) {
         cmdButton.onclick = clickCmdMenu
         menuCmd.appendChild(cmdButton)
     }
-    console.log("clickTopMenu done")
+    console.log("clickTopMenuForced done")
 }
 
 //================= sim: clickCmdMenu
