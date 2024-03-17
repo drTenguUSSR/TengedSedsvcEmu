@@ -45,6 +45,7 @@ h1 {
 }*/
 
 
+
 /* hover-and-selected BEG*/
 .button_xmenu:hover {
     border-style: solid;
@@ -62,6 +63,21 @@ h1 {
 .block_hide {
     display: none;
 /*    background-color: red;*/
+}
+
+.block_init {
+    background-color: #FFFF33;
+/*    background-color: red;*/
+}
+
+.block_error {
+/*    Light Red Color*/
+    background-color: #FF7F7F;
+}
+
+.block_pass {
+/*    Light Green*/
+    background-color: #90EE90;
 }
 
 .button_xmenu_selected:hover {
@@ -136,6 +152,7 @@ h1 {
 
 .r-panel__top {
 /*    background-color: lightcyan;*/
+    width: 50%;
 }
 
 .r-panel_request-text {
@@ -162,6 +179,10 @@ h1 {
     margin: .3rem;
     padding: .3rem;
     line-height: 2rem;
+}
+
+.btn-common_long {
+    width: 40rem;
 }
 
 /* font-style: italic; font-size: small; */

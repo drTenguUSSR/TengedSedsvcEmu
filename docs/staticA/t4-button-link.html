@@ -17,7 +17,13 @@
 <body>
   <!-- class="button-menu" -->
   <!-- style="display: flex; justify-content: space-between;" -->
-  <!-- class="button-menu11" -->
+  <!-- 
+let entryPointUrl = "" //установленный URL для точки входа
+let entryPointData = "" //загруженный и распарсенный JSON из точки входа
+let сonfigYamlData = "" // загруженный и распарсенный YAML настройки
+let selectedTopSection = "" // текущая выбранная в top меню секция
+в ответе сервера нужен заголовок 'Access-Control-Allow-Origin'  со значением "*"
+  -->
   <header class="row-header">
     <div class="header-logo">
         <img src="images/site-logo.gif" alt="site-logo" width="50" height="50">
@@ -47,30 +53,30 @@
         </button>
    </aside>
    <main class="r-panel">
-        <div class="r-panel__top">
-            entry point: <button id="q-entry" onclick="dialogEntryPoint(event)">???</button>
-            <button onclick="checkEntryPoint(event)">check</button>
+        <div id="r-panel__entry-text" class="r-panel__top"></div>
+        <div id="r-panel__entry-point" class="r-panel__top block_init">
+            entry point: <button id="q-entry" onclick="dialogEntryPoint(event)">http://some.host/app/entry-point</button>
+        </div>
+        <div id="r-panel__entry-href" class="r-panel__top">
+            relation: <span id="request-relation">some#href</span>
         </div>
         <div class="r-panel__top">
-            relation: <button>some#href</button>
-        </div>
-        <div class="r-panel__top">
-        Content-Type: 
-            <input id="request-type" type="text" autocomplete=off size=60 name="contentType"
-            form="example-request" 
+        Content-Type:
+            <input id="request-type" type="text" autocomplete=off size=90 name="contentType"
+            form="example-request"
             value="application/vnd.intertrust.cm.sedsvc+json;type=svcCheckPdf-request">
         </div>
 
         <div class="r-panel__top">
         form action:
-        <button id="form-action" class="btn-common" onclick="showActionDialog()">
-            http://localhost:8070/ext-sedsvc/upload-m/?command=svcCheckPdf
+        <button id="form-action" class="btn-common btn-common_long" onclick="showActionDialog()">
+            http://some.host.dom:8070/ext-sedsvc/upload-m/?command=svcCheckPdf
         </button>
         </div>
 
     <!-- action="http://localhost:8070/ext-sedsvc/upload-m/?command=svcMakeStamp" -->
     <form id="example-request" 
-       action="http://localhost:8070/ext-sedsvc/upload-m/?command=svcCheckPdf"
+       action="http://some.host.dom:8070/ext-sedsvc/upload-m/?command=svcCheckPdf"
        method="POST" enctype="multipart/form-data">
     </form>
     <textarea id="request-text" form="example-request" 

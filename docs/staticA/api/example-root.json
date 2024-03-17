@@ -1,5 +1,5 @@
 {
-  "title" : "svcsed-root",
+  "title" : "build-in template",
   "entry" : [ {
     "rel" : "http://intertrust.ru/cmj/sedsvc/relations#word2pdf",
     "href" : "http://localhost:8070/ext-sedsvc/upload-m/?command=svcWord2Pdf",

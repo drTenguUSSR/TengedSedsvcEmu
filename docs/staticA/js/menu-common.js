@@ -1,7 +1,14 @@
 'use strict';
 
-let entryPoint = ""
-let entryData = ""
+let entryPointUrl = "" //установленный URL для точки входа
+let entryPointData = "" //загруженный и распарсенный JSON из точки входа
+let сonfigYamlData = "" // загруженный и распарсенный YAML настройки
+let selectedTopSection = "" // текущая выбранная в top меню секция
+
+const сonfigYamlPath = "api/data-main.yaml"
+const filterTopMenuButtons='[id^="tab-"]'
+const filterCmdMenuButtons='[id^="cmd-"]'
+const block_hide="block_hide"
 
 const menuTop = document.getElementById("menu-top")
 const menuCmd = document.getElementById("menu-cmd")
@@ -15,6 +22,19 @@ fileBinputFile.info="fileBinputInfo"
 const fileCinputFile=document.getElementById("fileCinput")
 fileCinputFile.info="fileCinputInfo"
 
+const elRpanelEntryPoint = document.getElementById("r-panel__entry-point")
+const elRpanelEntryText = document.getElementById("r-panel__entry-text")
+const elRpanelEntryHref = document.getElementById("r-panel__entry-href")
+
+
+
+const elRPanelActionField= document.getElementById("form-action")
+const elRPanelActionForm= document.getElementById("example-request")
+
+const elRpanelRequestText = document.getElementById("request-text")
+const elRpanelContentType = document.getElementById("request-type")
+const elRpanelRelation = document.getElementById("request-relation")
+
 function domReady() {
     console.log('DOMready')
     fileAinputFile.addEventListener("change", fileChanges)
@@ -23,45 +43,47 @@ function domReady() {
     simOnload()
 }
 
-
 document.addEventListener("DOMContentLoaded", domReady);
 
-// console.log("document.readyState="+document.readyState); 
-//  => document.readyState=interactive
-
-function dialogEntryPoint(event) {
-    let currEntry = entryPoint || "http://localhost:8070/ext-sedsvc/entry-point/"
-    let res =  window.prompt("введите адрес entry point СЭДсервиса", currEntry);
-    entryPoint = res
-    console.log(`entry=${entryPoint}`)
+async function dialogEntryPoint(event) {
+    let currEntry = entryPointUrl || "http://localhost:8070/ext-sedsvc/entry-point/"
+    let res =  window.prompt("введите адрес entry point СЭДсервиса\n'~' для api/example-root.json", currEntry);
+    if (res == null ) {
+        console.log("dialog canceled")
+        return
+    }
+    entryPointUrl = res
+    console.log(`entryPointUrl=${entryPointUrl}`)
     let elEnt = document.getElementById("q-entry")
-    elEnt.innerHTML=`${entryPoint}`
-}
+    elEnt.innerHTML=`${entryPointUrl}`
 
-function checkEntryPoint(event) {
-    console.log("checkEntryPoint-BEG")
-    if (entryPoint.length<3) {
+    if (entryPointUrl.length<3 && entryPointUrl != '~') {
         alert("адрес точки доступа не указан")
         return
     }
-    checkEntryPointLoad(entryPoint)
+    let response
+    try {
+        if (entryPointUrl == "~") {
+            console.log("fetch: overload to build in [api/example-root.json]")
+            response = await fetch("api/example-root2.json")
+        } else {
+            console.log("fetch: loading")
+            response = await fetch(entryPointUrl)
+        }
+        const cfgData = await response.json()
+        console.log(`loaded cfg.title=${cfgData.title}`)
+        entryPointData = cfgData
+        elRpanelEntryText.innerText = ""
+        elRpanelEntryPoint.classList.remove("block_init")
+        elRpanelEntryPoint.classList.add("block_pass")
+    } catch (ex) {
+        console.log("error!")
+        console.log(ex)
+        elRpanelEntryText.innerText = ex
+        elRpanelEntryPoint.classList.remove("block_init")
+        elRpanelEntryPoint.classList.add("block_error")
+    }
     console.log("checkEntryPoint-END")
-}
-
-async function checkEntryPointLoad(entryPoint) {
-    console.log(`entryPoint=${entryPoint}`)
-    let response = await fetch(entryPoint)
-    //,{ mode: 'no-cors'}
-    // let data2 = await response.json()
-    // console.log(JSON.stringify(data2))
-    // for( const ent of keys(data2)) {
-    //     console.log(`ent: ${ent}`)
-    // }
-    const dataText=await response.text()
-    console.log("ready-1")
-    console.log(dataText.length)
-    console.log("ready-2")
-    console.log(dataText)
 }
 
 
@@ -119,32 +141,19 @@ function buttonsRefresh(selectedId, menuRoot) {
     }
 }
 //====================== simOnload
-const filterTopMenuButtons='[id^="tab-"]'
-const filterCmdMenuButtons='[id^="cmd-"]'
-const block_hide="block_hide"
-const cfgPath = "api/data-main.yaml"
-let loadedConfig
-let selectedTopSection
 
 async function simOnload() {
-    console.log("simOnload-beg/001")
-    console.log(`cfg ${cfgPath}. load and parse`)
-    const ydoc= await simOnload_parseCfg(cfgPath)
-    const baseRel=ydoc.common['base-rel']
-    console.log(`done. baseRel=[${baseRel}]`)
-
-    processTopMenu(ydoc)
-    clearAside()
-
-    loadedConfig=ydoc
-    console.log("simOnload-end")
-}
-
-async function simOnload_parseCfg(filePath) {
-    const response=await fetch(filePath)
+    console.log("simOnload-beg")
+    console.log(`cfg ${сonfigYamlPath}. load and parse`)
+    const response=await fetch(сonfigYamlPath)
     const dataText=await response.text()
     const ydoc = jsyaml.load(dataText)
-    return ydoc
+    const baseRel=ydoc.common['base-rel']
+    console.log(`done. baseRel=[${baseRel}]`)
+    processTopMenu(ydoc)
+    clearAside()
+    сonfigYamlData=ydoc
+    console.log("simOnload-end")
 }
 
 function processTopMenu(ydoc) {
@@ -190,7 +199,7 @@ function clickTopMenu(event) {
     console.log("eventId="+selectedId)
     clearAside()
 
-    const cfgAsideList=loadedConfig[selectedId]
+    const cfgAsideList=сonfigYamlData[selectedId]
 
     for( const cfgCmd of cfgAsideList) {
         console.log(`- id:${cfgCmd.id}`)
@@ -210,31 +219,39 @@ function clickCmdMenu(event) {
     const selectedId=event.target.id
     console.log(`clickCmdMenu: ${selectedId} in sect: ${selectedTopSection}`)
     buttonsRefresh(selectedId,menuCmd)
-    const cfgSection = loadedConfig[selectedTopSection]
-
+    const cfgSection = сonfigYamlData[selectedTopSection]
     const cfgCmd = cfgSection.find(obj => obj.id === selectedId)
     console.log("found-cmd:")
     console.log(cfgCmd)
 
-    clickCmdMenuFiller(cfgCmd)
+    clickCmdMenuFile("fileA",cfgCmd)
+    clickCmdMenuFile("fileB",cfgCmd)
+    clickCmdMenuFile("fileC",cfgCmd)
+
+    elRpanelRequestText.value = cfgCmd.request
+    elRpanelContentType.value = cfgCmd['content-type']
+    const fullRel = сonfigYamlData.common['base-rel']+cfgCmd.rel
+    console.log(`fullRel=${fullRel}`)
+    elRpanelRelation.innerText = fullRel
+    console.log(typeof entryPointData.entry)
+    const formAction = entryPointData.entry.find(obj => obj.rel == fullRel)?.href
+
+    if (formAction !=null) {
+        console.log(`formAction=${formAction}`)
+        elRPanelActionField.innerText = formAction
+        elRPanelActionForm.action = formAction
+        elRpanelEntryHref.classList.remove("block_error")
+        elRpanelEntryText.innerText = ""
+    } else {
+        const msg = "в точке входа отсутствует relation"
+        elRpanelEntryHref.classList.add("block_error")
+        elRpanelEntryText.innerText = msg
+    }
+
+    console.log("clickCmdMenu done")
 }
 
-function clickCmdMenuFiller(cfgCmd) {
-    clickCmdMenuFillerRequest(cfgCmd)
-    clickCmdMenuFillerFile("fileA",cfgCmd)
-    clickCmdMenuFillerFile("fileB",cfgCmd)
-    clickCmdMenuFillerFile("fileC",cfgCmd)
-}
-
-function clickCmdMenuFillerRequest(cfgCmd) {
-    const elRequestText = document.getElementById("request-text")
-    const elContentType = document.getElementById("request-type")
-    elRequestText.value = cfgCmd.request
-    elContentType.value = cfgCmd['content-type']
-    console.log(cfgCmd['content-type'])
-}
-
-function clickCmdMenuFillerFile(prefix,cfgCmd) {
+function clickCmdMenuFile(prefix,cfgCmd) {
     const suffixBlock="block"
     const suffixLabel="inputLabel"
     const suffixInfo="inputInfo"

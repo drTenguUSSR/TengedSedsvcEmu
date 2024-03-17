@@ -23,7 +23,7 @@ tab-standart:
       content-type: "application/vnd.intertrust.cm.sedsvc+json;type=svcCheckPdf-request"
       request: |-
             {
-                skipPDFA1check : true
+                "skipPDFA1check" : true
             }
       some-other: vals2
       fileA:
