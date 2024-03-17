@@ -233,7 +233,10 @@ function clickCmdMenu(event) {
     const fullRel = сonfigYamlData.common['base-rel']+cfgCmd.rel
     console.log(`fullRel=${fullRel}`)
     elRpanelRelation.innerText = fullRel
-    console.log(typeof entryPointData.entry)
+    if (entryPointData == undefined || entryPointData == "") {
+        alert("загрузите entrypoint или укажите файл с его содержимым")
+        return
+    }
     const formAction = entryPointData.entry.find(obj => obj.rel == fullRel)?.href
 
     if (formAction !=null) {

@@ -51,8 +51,8 @@ let selectedTopSection = "" // текущая выбранная в top меню
        <button id="cmd-over1" class="smenu__item button_xmenu" onclick="clickCmdMenu(event)">
         Сервис для наложения png файлов на указанные координаты заданного размера
         </button>
-   </aside>
-   <main class="r-panel">
+    </aside>
+    <main class="r-panel">
         <div id="r-panel__entry-text" class="r-panel__top"></div>
         <div id="r-panel__entry-point" class="r-panel__top block_init">
             entry point: <button id="q-entry" onclick="dialogEntryPoint(event)">http://some.host/app/entry-point</button>
@@ -74,13 +74,13 @@ let selectedTopSection = "" // текущая выбранная в top меню
         </button>
         </div>
 
-    <!-- action="http://localhost:8070/ext-sedsvc/upload-m/?command=svcMakeStamp" -->
-    <form id="example-request" 
-       action="http://some.host.dom:8070/ext-sedsvc/upload-m/?command=svcCheckPdf"
-       method="POST" enctype="multipart/form-data">
-    </form>
-    <textarea id="request-text" form="example-request" 
-       class="r-panel_request-text" name="mainData" required minLength="10">
+        <!-- action="http://localhost:8070/ext-sedsvc/upload-m/?command=svcMakeStamp" -->
+        <form id="example-request" 
+           action="http://some.host.dom:8070/ext-sedsvc/upload-m/?command=svcCheckPdf"
+           method="POST" enctype="multipart/form-data">
+        </form>
+        <textarea id="request-text" form="example-request" 
+            class="r-panel_request-text" name="mainData" required minLength="10">
 {
 
     "skipPDFA1check" : true
@@ -105,9 +105,11 @@ let selectedTopSection = "" // текущая выбранная в top меню
             <input type="file" id="fileCinput" form="example-request" name="file" multiple="multiple">
         </div>
 
-        <br>
-        <input type="submit" form="example-request" class="btn-common" value="выполнить запрос формы">
-        <input type="reset" form="example-request" class="btn-common" value="сброс формы" onClick="exampleRequestReset(event)">
+        <div>
+            <input type="submit" form="example-request" class="btn-common" value="выполнить запрос формы">
+            <input type="reset" form="example-request" class="btn-common" value="сброс формы" onClick="exampleRequestReset(event)">
+            <button class="btn-common" type="button"  onclick="testFilesInfo(event)">test FileInfo(A,B,C)</button>
+        </div>
 
     </main>
 </div>
@@ -128,12 +130,13 @@ let selectedTopSection = "" // текущая выбранная в top меню
 </dialog>
 
 <footer> (c) drTengu &#x1f47a;, 2024 &#129489;&#8205;&#128295;
-    <hr> <!-- mainFunc section -->
-        <button type="button" class="btn-common" onclick="testYamlLoad(event)">test ParseYaml</button>
-        <button type="button" class="btn-common" onclick="testQueryTopElements(event)">test QueryTopElements</button>
-        <button type="button" class="btn-common" onclick="testLoadYamlAndHideTop(event)">test testLoadYamlAndHideTop</button>
-    <hr> <!-- selFiles section -->
-        <button type="button" class="btn-common" onclick="testFilesInfo(event)">test FileInfo(A,B,C)</button>
+
+         <!-- mainFunc section -->
+        <!-- <button type="button" class="btn-common" onclick="testYamlLoad(event)">test ParseYaml</button> -->
+        <!-- <button type="button" class="btn-common" onclick="testQueryTopElements(event)">test QueryTopElements</button> -->
+        <!-- <button type="button" class="btn-common" onclick="testLoadYamlAndHideTop(event)">test testLoadYamlAndHideTop</button> -->
+
+        <!-- <button class="btn-common" type="button"  onclick="testFilesInfo(event)">test FileInfo(A,B,C)</button> -->
 </footer>
 </body>
 
