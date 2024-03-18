@@ -1,0 +1,24 @@
+  <!-- class="button-menu" -->
+  <!-- style="display: flex; justify-content: space-between;" -->
+
+<!-- work  check pdf
+R1
+            <input type="file" id="file" name="file">
+        //<input type="file" id="fileXinput2" name="fileX2" multiple="multiple">
+
+R2
+        <input type="file" form="example-request" name="file">
+        <input type="file" form="example-request" name="file" multiple="multiple">
+
+    <hr>
+        <button type="button" class="btn-common" onclick="simOnload(event)">test simOnload</button>
+-->
+
+        <!-- action="http://localhost:8070/ext-sedsvc/upload-m/?command=svcMakeStamp" -->
+
+         <!-- mainFunc section -->
+        <!-- <button type="button" class="btn-common" onclick="testYamlLoad(event)">test ParseYaml</button> -->
+        <!-- <button type="button" class="btn-common" onclick="testQueryTopElements(event)">test QueryTopElements</button> -->
+        <!-- <button type="button" class="btn-common" onclick="testLoadYamlAndHideTop(event)">test testLoadYamlAndHideTop</button> -->
+
+        <!-- <button class="btn-common" type="button"  onclick="testFilesInfo(event)">test FileInfo(A,B,C)</button> -->

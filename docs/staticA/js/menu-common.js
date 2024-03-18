@@ -35,21 +35,19 @@ const elRpanelRequestText = document.getElementById("request-text")
 const elRpanelContentType = document.getElementById("request-type")
 const elRpanelRelation = document.getElementById("request-relation")
 
-async function domReady() {
+function domReady() {
     console.log('DOMready')
     fileAinputFile.addEventListener("change", fileChanges)
     fileBinputFile.addEventListener("change", fileChanges)
     fileCinputFile.addEventListener("change", fileChanges)
-    await simOnload()
-    selectedTopSection="basic"
-    clickTopMenuForced()
+    docOnLoad()
 }
 
-document.addEventListener("DOMContentLoaded", domReady);
+document.addEventListener("DOMContentLoaded", domReady)
 
 async function dialogEntryPoint(event) {
     let currEntry = entryPointUrl || "http://localhost:8070/ext-sedsvc/entry-point/"
-    let res =  window.prompt("введите адрес entry point СЭДсервиса\n'~' для api/example-root.json", currEntry);
+    let res =  window.prompt("введите адрес entry point СЭДсервиса\n'~' для api/example-root.json", currEntry)
     if (res == null ) {
         console.log("dialog canceled")
         return
@@ -122,29 +120,29 @@ function exampleRequestReset(event) {
 
 function exampleRequestResetSub(label) {
     let elInf=document.getElementById(label+"Info")
-    elInf.innerText="";
+    elInf.innerText=""
 }
 
-//====================== simOnLoad common functions
+//====================== docOnLoad common functions
 function buttonsRefresh(selectedId, menuRoot) {
-    console.log("click on ["+selectedId+"]");
+    console.log("click on ["+selectedId+"]")
     for(const sel of menuRoot.children) {
         if (sel.id==selectedId) {
             if (!sel.classList.contains(menuClassSelected)) {
-                sel.classList.add(menuClassSelected);
+                sel.classList.add(menuClassSelected)
             }
             sel.disabled=true
         } else {
             if (sel.classList.contains(menuClassSelected)) {
-                sel.classList.remove(menuClassSelected);
+                sel.classList.remove(menuClassSelected)
             }
             sel.disabled=false
         }
     }
 }
-//====================== simOnload
+//====================== docOnLoad
 
-async function simOnload() {
+async function docOnLoad() {
     console.log("simOnload-beg")
     console.log(`cfg ${сonfigYamlPath}. load and parse`)
     const response=await fetch(сonfigYamlPath)
@@ -152,13 +150,18 @@ async function simOnload() {
     const ydoc = jsyaml.load(dataText)
     const baseRel=ydoc.common['base-rel']
     console.log(`done. baseRel=[${baseRel}]`)
-    processTopMenu(ydoc)
-    clearAside()
     сonfigYamlData=ydoc
+    initTopMenu()
+    clearAside()
+    //force loading first items
+    selectedTopSection="tab-standart"
+    const cmdAid=ydoc[selectedTopSection][0].id
+    clickTopMenuForced()
+    clickCmdMenuForced(cmdAid, true)
     console.log("simOnload-end")
 }
 
-function processTopMenu(ydoc) {
+function initTopMenu() {
     const topAllBtnEl=menuTop.querySelectorAll(filterTopMenuButtons)
     const topAllBtnId = new Set()
 
@@ -168,7 +171,7 @@ function processTopMenu(ydoc) {
     console.log("topTab-all:"+Array.from(topAllBtnId).join(","))
 
     const hideSect = new Set(topAllBtnId)
-    for(const sect in ydoc) {
+    for(const sect in сonfigYamlData) {
         console.log(`cfg: found section: ${sect}`)
         hideSect.delete(sect)
     }
@@ -226,7 +229,10 @@ function clickTopMenuForced() {
 //================= sim: clickCmdMenu
 function clickCmdMenu(event) {
     const selectedId=event.target.id
-    console.log(`clickCmdMenu: ${selectedId} in sect: ${selectedTopSection}`)
+    clickCmdMenuForced(selectedId)
+}
+function clickCmdMenuForced(selectedId, silentLoad = false) {
+    console.log(`clickCmdMenuForced: ${selectedId} in sect: ${selectedTopSection}`)
     buttonsRefresh(selectedId,menuCmd)
     const cfgSection = сonfigYamlData[selectedTopSection]
     const cfgCmd = cfgSection.find(obj => obj.id === selectedId)
@@ -242,25 +248,28 @@ function clickCmdMenu(event) {
     const fullRel = сonfigYamlData.common['base-rel']+cfgCmd.rel
     console.log(`fullRel=${fullRel}`)
     elRpanelRelation.innerText = fullRel
-    if (entryPointData == undefined || entryPointData == "") {
-        alert("загрузите entrypoint или укажите файл с его содержимым")
+    if (!silentLoad && (entryPointData == undefined || entryPointData == "")) {
+        alert("загрузите entryPoint или укажите файл с его содержимым")
         return
     }
-    const formAction = entryPointData.entry.find(obj => obj.rel == fullRel)?.href
 
-    if (formAction !=null) {
-        console.log(`formAction=${formAction}`)
-        elRPanelActionField.innerText = formAction
-        elRPanelActionForm.action = formAction
-        elRpanelEntryHref.classList.remove("block_error")
-        elRpanelEntryText.innerText = ""
+    if (entryPointData == undefined || entryPointData == "") {
+        console.log("entryPointData is empty. no data for overwrite form-action")
     } else {
-        const msg = "в точке входа отсутствует relation"
-        elRpanelEntryHref.classList.add("block_error")
-        elRpanelEntryText.innerText = msg
+        const formAction = entryPointData.entry.find(obj => obj.rel == fullRel)?.href
+        if (formAction !=null) {
+            console.log(`formAction=${formAction}`)
+            elRPanelActionField.innerText = formAction
+            elRPanelActionForm.action = formAction
+            elRpanelEntryHref.classList.remove("block_error")
+            elRpanelEntryText.innerText = ""
+        } else {
+            const msg = "в точке входа отсутствует relation"
+            elRpanelEntryHref.classList.add("block_error")
+            elRpanelEntryText.innerText = msg
+        }
     }
-
-    console.log("clickCmdMenu done")
+    console.log("clickCmdMenuForced done")
 }
 
 function clickCmdMenuFile(prefix,cfgCmd) {
@@ -292,5 +301,5 @@ function clickCmdMenuFile(prefix,cfgCmd) {
 }
 
 function isNullOrUndefined(value) {
-  return value === undefined || value === null;
+  return value === undefined || value === null
 }

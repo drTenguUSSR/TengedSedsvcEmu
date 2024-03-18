@@ -4,26 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>t4-button-link</title>
-
     <link rel="icon" sizes="50x50" type="image/gif" href="images/icons8-wrench.gif">
     <link rel="stylesheet" type="text/css" href="css/common-style.css">
     <link href="libs/jsoneditor.min.css" rel="stylesheet" type="text/css">
-
     <script src="libs/jsoneditor.min.js"></script>
     <script src="libs/js-yaml.js"></script>
     <script defer src="js/menu-common.js"> </script>
     <script defer src="js/t24-menu-common.js"> </script>
 </head>
 <body>
-  <!-- class="button-menu" -->
-  <!-- style="display: flex; justify-content: space-between;" -->
-  <!-- 
-let entryPointUrl = "" //установленный URL для точки входа
-let entryPointData = "" //загруженный и распарсенный JSON из точки входа
-let сonfigYamlData = "" // загруженный и распарсенный YAML настройки
-let selectedTopSection = "" // текущая выбранная в top меню секция
-в ответе сервера нужен заголовок 'Access-Control-Allow-Origin'  со значением "*"
-  -->
   <header class="row-header">
     <div class="header-logo">
         <img src="images/site-logo.gif" alt="site-logo" width="50" height="50">
@@ -41,21 +30,11 @@ let selectedTopSection = "" // текущая выбранная в top меню
 </header>
 
 <div class="row-side">
-    <aside id="menu-cmd" class="smenu">
-       <button id="cmd-stamp" class="smenu__item button_xmenu" onclick="clickCmdMenu(event)">stamp</button>
-       <button id="cmd-pdf" class="smenu__item button_xmenu" onclick="clickCmdMenu(event)">
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Eos dignissimos, nihil molestias quia sunt, 
-        voluptate mollitia provident obcaecati eveniet recusandae architecto nisi consequatur corporis 
-        officiis aspernatur beatae voluptatum laboriosam minus!
-       </button>
-       <button id="cmd-over1" class="smenu__item button_xmenu" onclick="clickCmdMenu(event)">
-        Сервис для наложения png файлов на указанные координаты заданного размера
-        </button>
-    </aside>
+    <aside id="menu-cmd" class="smenu"></aside>
     <main class="r-panel">
         <div id="r-panel__entry-text" class="r-panel__top"></div>
         <div id="r-panel__entry-point" class="r-panel__top block_init">
-            entry point: <button id="q-entry" onclick="dialogEntryPoint(event)">http://some.host/app/entry-point</button>
+            entryPoint: <button id="q-entry" onclick="dialogEntryPoint(event)">http://some.host/app/entry-point</button>
         </div>
         <div id="r-panel__entry-href" class="r-panel__top">
             relation: <span id="request-relation">some#href</span>
@@ -74,18 +53,13 @@ let selectedTopSection = "" // текущая выбранная в top меню
         </button>
         </div>
 
-        <!-- action="http://localhost:8070/ext-sedsvc/upload-m/?command=svcMakeStamp" -->
         <form id="example-request" 
            action="http://some.host.dom:8070/ext-sedsvc/upload-m/?command=svcCheckPdf"
            method="POST" enctype="multipart/form-data">
         </form>
         <textarea id="request-text" form="example-request" 
             class="r-panel_request-text" name="mainData" required minLength="10">
-{
-
-    "skipPDFA1check" : true
-}
-    </textarea>
+        </textarea>
 
         <div id="fileAblock">
             <label id="fileAinputLabel" for="fileAinput" class="r-panel__btn-label">extenA</label>
@@ -129,15 +103,7 @@ let selectedTopSection = "" // текущая выбранная в top меню
   </form>
 </dialog>
 
-<footer> (c) drTengu &#x1f47a;, 2024 &#129489;&#8205;&#128295;
-
-         <!-- mainFunc section -->
-        <!-- <button type="button" class="btn-common" onclick="testYamlLoad(event)">test ParseYaml</button> -->
-        <!-- <button type="button" class="btn-common" onclick="testQueryTopElements(event)">test QueryTopElements</button> -->
-        <!-- <button type="button" class="btn-common" onclick="testLoadYamlAndHideTop(event)">test testLoadYamlAndHideTop</button> -->
-
-        <!-- <button class="btn-common" type="button"  onclick="testFilesInfo(event)">test FileInfo(A,B,C)</button> -->
-</footer>
+<footer> (c) drTengu &#x1f47a;, 2024 &#129489;&#8205;&#128295;</footer>
 </body>
 
 <script type="text/javascript">
@@ -181,17 +147,5 @@ let selectedTopSection = "" // текущая выбранная в top меню
         console.log("dialogExec-end")
     }
 </script>
-<!-- work  check pdf
-R1
-            <input type="file" id="file" name="file">
-        //<input type="file" id="fileXinput2" name="fileX2" multiple="multiple">
-
-R2
-        <input type="file" form="example-request" name="file">
-        <input type="file" form="example-request" name="file" multiple="multiple">
-
-    <hr>
-        <button type="button" class="btn-common" onclick="simOnload(event)">test simOnload</button>
--->
 </html>
 

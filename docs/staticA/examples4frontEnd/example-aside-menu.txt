@@ -1,0 +1,13 @@
+example static aside content
+
+    <aside id="menu-cmd" class="smenu">
+       <button id="cmd-stamp" class="smenu__item button_xmenu" onclick="clickCmdMenu(event)">stamp</button>
+       <button id="cmd-pdf" class="smenu__item button_xmenu" onclick="clickCmdMenu(event)">
+        Lorem ipsum dolor sit amet consectetur adipisicing elit. Eos dignissimos, nihil molestias quia sunt, 
+        voluptate mollitia provident obcaecati eveniet recusandae architecto nisi consequatur corporis 
+        officiis aspernatur beatae voluptatum laboriosam minus!
+       </button>
+       <button id="cmd-over1" class="smenu__item button_xmenu" onclick="clickCmdMenu(event)">
+        Сервис для наложения png файлов на указанные координаты заданного размера
+        </button>
+    </aside>
