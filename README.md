@@ -2,9 +2,9 @@
 
 ## текущая реализация
 
-[пример front-end реализации](blob/main/staticA/index.html)
+[пример front-end реализации](https://drtenguussr.github.io/TengedSedsvcEmu/staticA/index.html)
 
-[код эмулятора backend. serverA](blob/main/tree/main/serverA)
+[код эмулятора backend. serverA](https://github.com/drTenguUSSR/TengedSedsvcEmu/tree/main/serverA)
 
 ## назначение проекта
 
