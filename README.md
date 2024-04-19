@@ -2,9 +2,9 @@
 
 ## текущая реализация
 
-[пример front-end реализации](../../staticA/index.html)
+[пример front-end реализации](blob/main/staticA/index.html)
 
-[код эмулятора backend. serverA](../../tree/main/serverA)
+[код эмулятора backend. serverA](blob/main/tree/main/serverA)
 
 ## назначение проекта
 
