@@ -2,7 +2,9 @@
 
 ## текущая реализация
 
-[ссылка на TengedSedsvcEmu опубликованная в /docs](https://drtenguussr.github.io/TengedSedsvcEmu/staticA/index.html)
+[пример front-end реализации](staticA/index.html)
+
+[код эмулятора backend. serverA](tree/main/serverA)
 
 ## назначение проекта
 

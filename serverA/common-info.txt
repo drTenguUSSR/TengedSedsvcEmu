@@ -1,0 +1,4 @@
+skip backup folders:
+- logs
+- target
+- tmpFolder
