@@ -27,9 +27,9 @@ TengedSedsvcEmu пет-проект реализующий интерфейс С
 - 2.x - создание имитатора back-end СЭДсервиса. принимающего
     и минимально валидирующего запросы и возвращающего фиксированные
     файлы в виде ответа. технология: SpringBoot актуальной версии +
-    язык Kotlin + сборка Gradle/Kotlin + JDK 17.
-    согласно [https://start.spring.io/](https://start.spring.io/) это минимальная
-    версия для SpringBoot
+    язык Kotlin + сборка Maven + JDK 17.
+    прим: JDK 17 - согласно [https://start.spring.io/](https://start.spring.io/)
+    это минимальная версия для SpringBoot 3.2.3
 
 ## план по версиям до 1.x
 
