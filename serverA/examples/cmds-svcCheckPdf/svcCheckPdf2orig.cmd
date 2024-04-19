@@ -1,0 +1,2 @@
+@rem "http://localhost:8071/api/execRequest?command=svcCheckPdf"
+curl -vvv -o svcCheckPdf2orig --trace-ascii svcCheckPdf2orig-log.txt -X POST --data-binary @svcCheckPdf.txt -H "Content-Type: multipart/form-data; boundary=----WebKitFormBoundarywpF78Kb00yqvJkVf" "http://localhost:8070/ext-sedsvc/upload-m/?command=svcCheckPdf"

@@ -1,0 +1,27 @@
+-----------------------------18467633426500
+Content-Disposition: form-data; name="contentType"
+
+application/vnd.intertrust.cm.sedsvc+json;type=svcRegSignStamp-request
+-----------------------------18467633426500
+Content-Disposition: form-data; name="mainData"
+
+{
+  "regStampDatas":[
+             {
+                "id":"test-reg",
+                "date":"2016-05-10",
+                "number":"3333-333-34"
+             }
+  ],
+   "signStampDatas":[
+             {
+                "id":"test-sign",
+                "certificate":"12000F8147B11ED99B090F61450000000F8147",
+                "signer":"Иванов Иван Иванович",
+                "validFrom":"2016-01-05",
+                "validTo":"2017-01-05"
+             }
+
+  ]
+}	
+-----------------------------18467633426500--

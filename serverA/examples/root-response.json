@@ -1,0 +1,60 @@
+{
+  "title" : "build-in template",
+  "entry" : [ {
+    "rel" : "http://intertrust.ru/cmj/sedsvc/relations#word2pdf",
+    "href" : "http://localhost:8070/ext-sedsvc/upload-m/?command=svcWord2Pdf",
+    "title" : "svc for word2pdf conversion"
+  }, {
+    "rel" : "http://intertrust.ru/cmj/sedsvc/relations#pdf2PdfA",
+    "href" : "http://localhost:8070/ext-sedsvc/upload-m/?command=svcPdf2PdfA",
+    "title" : "svc for convert to pdf/A and overPrint"
+  }, {
+    "rel" : "http://intertrust.ru/cmj/sedsvc/relations#overPrintPdf",
+    "href" : "http://localhost:8070/ext-sedsvc/upload-m/?command=svcOverPrintPdf",
+    "title" : "svc for over print"
+  }, {
+    "rel" : "http://intertrust.ru/cmj/sedsvc/relations#checkPdf",
+    "href" : "http://localhost:8070/ext-sedsvc/upload-m/?command=svcCheckPdf",
+    "title" : "svc for check pdf"
+  }, {
+    "rel" : "http://intertrust.ru/cmj/sedsvc/relations#makeStamp",
+    "href" : "http://localhost:8070/ext-sedsvc/upload-m/?command=svcMakeStamp",
+    "title" : "svc for make stamp"
+  }, {
+    "rel" : "http://intertrust.ru/cmj/sedsvc/relations#makeRegSignStamp",
+    "href" : "http://localhost:8070/ext-sedsvc/upload-m/?command=svcRegSignStamp",
+    "title" : "svc for RegSign stamp"
+  }, {
+    "rel" : "http://intertrust.ru/cmj/sedsvc/relations#passportConvert",
+    "href" : "http://localhost:8070/ext-sedsvc/upload-m/?command=svcPassportConvert",
+    "title" : "svc for convert passport service"
+  }, {
+    "rel" : "http://intertrust.ru/cmj/sedsvc/relations#zipper",
+    "href" : "http://localhost:8070/ext-sedsvc/upload-m/?command=svcZipper",
+    "title" : "svc for convert passport service"
+  }, {
+    "rel" : "http://intertrust.ru/cmj/sedsvc/relations#splitPdf",
+    "href" : "http://localhost:8070/ext-sedsvc/upload-m/?command=svcSplitPdf",
+    "title" : "svc for split pdf"
+  }, {
+    "rel" : "http://intertrust.ru/cmj/sedsvc/relations#makeBarCode",
+    "href" : "http://localhost:8070/ext-sedsvc/upload-m/?command=svcMakeBarcode",
+    "title" : "svc for make bar code"
+  }, {
+    "rel" : "http://intertrust.ru/cmj/sedsvc/relations#multiFunctional",
+    "href" : "http://localhost:8070/ext-sedsvc/upload-m/?command=svcMultiFunctional",
+    "title" : "svc for multi functional"
+  }, {
+    "rel" : "http://intertrust.ru/cmj/sedsvc/relations#svcNamespacePrefixFixup",
+    "href" : "http://localhost:8070/ext-sedsvc/upload-m/?command=svcNamespacePrefixFixup",
+    "title" : "svc for namespace prefix fixup service"
+  }, {
+    "rel" : "http://intertrust.ru/cmj/sedsvc/relations#fieldchanger",
+    "href" : "http://localhost:8070/ext-sedsvc/upload-m/?command=svcFieldChanger",
+    "title" : "svc for change field service"
+  }, {
+    "rel" : "http://intertrust.ru/cmj/sedsvc/relations#makeUnifiedStamp",
+    "href" : "http://localhost:8070/ext-sedsvc/upload-m/?command=svcUnifiedStamp",
+    "title" : "svc for unified stamp service"
+  } ]
+}

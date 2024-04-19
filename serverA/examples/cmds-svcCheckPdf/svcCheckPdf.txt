@@ -1,0 +1,18 @@
+------WebKitFormBoundarywpF78Kb00yqvJkVf
+Content-Disposition: form-data; name="contentType"
+
+application/vnd.intertrust.cm.sedsvc+json;type=svcCheckPdf-request
+------WebKitFormBoundarywpF78Kb00yqvJkVf
+Content-Disposition: form-data; name="mainData"
+
+{
+	"markers" : ["[ПРИМЕР ДОПОЛНИТЕЛЬНОГО ШТАМПА]"]
+}
+------WebKitFormBoundarywpF78Kb00yqvJkVf
+Content-Disposition: form-data; name="file"; filename="demo-attach.pdf"
+Content-Type: application/pdf
+
+123
+123
+EOF
+------WebKitFormBoundarywpF78Kb00yqvJkVf--

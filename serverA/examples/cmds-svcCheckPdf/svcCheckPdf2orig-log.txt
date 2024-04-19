@@ -1,0 +1,206 @@
+== Info:   Trying [::1]:8070...
+== Info: Connected to localhost (::1) port 8070
+=> Send header, 223 bytes (0xdf)
+0000: POST /ext-sedsvc/upload-m/?command=svcCheckPdf HTTP/1.1
+0039: Host: localhost:8070
+004f: User-Agent: curl/8.4.0
+0067: Accept: */*
+0074: Content-Type: multipart/form-data; boundary=----WebKitFormBounda
+00b4: rywpF78Kb00yqvJkVf
+00c8: Content-Length: 547
+00dd: 
+=> Send data, 547 bytes (0x223)
+0000: ------WebKitFormBoundarywpF78Kb00yqvJkVf
+002a: Content-Disposition: form-data; name="contentType"
+005e: 
+0060: application/vnd.intertrust.cm.sedsvc+json;type=svcCheckPdf-reque
+00a0: st
+00a4: ------WebKitFormBoundarywpF78Kb00yqvJkVf
+00ce: Content-Disposition: form-data; name="mainData"
+00ff: 
+0101: {
+0104: ."markers" : ["[............ .............................. ....
+0144: ........]"]
+0151: }
+0154: ------WebKitFormBoundarywpF78Kb00yqvJkVf
+017e: Content-Disposition: form-data; name="file"; filename="demo-atta
+01be: ch.pdf"
+01c7: Content-Type: application/pdf
+01e6: 
+01e8: 123
+01ed: 123
+01f2: EOF
+01f7: ------WebKitFormBoundarywpF78Kb00yqvJkVf--
+<= Recv header, 26 bytes (0x1a)
+0000: HTTP/1.1 400 Bad Request
+<= Recv header, 37 bytes (0x25)
+0000: Date: Sat, 13 Apr 2024 15:41:55 GMT
+<= Recv header, 40 bytes (0x28)
+0000: Content-Type: text/plain;charset=utf-8
+<= Recv header, 22 bytes (0x16)
+0000: Content-Length: 9995
+<= Recv header, 33 bytes (0x21)
+0000: Server: Jetty(9.4.14.v20181114)
+<= Recv header, 2 bytes (0x2)
+0000: 
+<= Recv data, 9995 bytes (0x270b)
+0000: {
+0003:   "errorMessage" : "............ ............ ..................
+0043:  ...........Error: Header doesn't contain versioninfo",
+007c:   "systemInfo" : "*** Request: \nURI=[/ext-sedsvc/upload-m/],que
+00bc: ryString=[command=svcCheckPdf],headers=[{Accept=*/*, User-Agent=
+00fc: curl/8.4.0, Host=localhost:8070, Content-Length=547, Content-Typ
+013c: e=multipart/form-data; boundary=----WebKitFormBoundarywpF78Kb00y
+017c: qvJkVf}]\n\n*** Exception: \nException: ru.intertrust.cmjext.dom
+01bc: .pdf.checkpdf.CheckPdfException\r\nMessage: ............ .......
+01fc: ..... .................. ...........Error: Header doesn't contai
+023c: n versioninfo\r\nCurrent date: 13.04.2024 18:41:55:602\r\nStack 
+027c: trace: ru.intertrust.cmjext.dom.pdf.checkpdf.CheckPdfException: 
+02bc: ............ ............ .................. ...........Error: H
+02fc: eader doesn't contain versioninfo\r\n\tat ru.intertrust.cmjext.d
+033c: om.pdf.checkpdf.ServiceCheckPdf.checkFile(ServiceCheckPdf.java:1
+037c: 82)\r\n\tat ru.intertrust.cmjext.dom.pdf.checkpdf.ServiceCheckPd
+03bc: f.execute(ServiceCheckPdf.java:93)\r\n\tat ru.intertrust.cmjext.
+03fc: rest.svc.SvcUploaderExt.svcRequestProcessor_POST(SvcUploaderExt.
+043c: java:144)\r\n\tat sun.reflect.NativeMethodAccessorImpl.invoke0(N
+047c: ative Method)\r\n\tat sun.reflect.NativeMethodAccessorImpl.invok
+04bc: e(NativeMethodAccessorImpl.java:62)\r\n\tat sun.reflect.Delegati
+04fc: ngMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43
+053c: )\r\n\tat java.lang.reflect.Method.invoke(Method.java:498)\r\n\t
+057c: at org.springframework.web.method.support.InvocableHandlerMethod
+05bc: .doInvoke(InvocableHandlerMethod.java:221)\r\n\tat org.springfra
+05fc: mework.web.method.support.InvocableHandlerMethod.invokeForReques
+063c: t(InvocableHandlerMethod.java:137)\r\n\tat org.springframework.w
+067c: eb.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.i
+06bc: nvokeAndHandle(ServletInvocableHandlerMethod.java:110)\r\n\tat o
+06fc: rg.springframework.web.servlet.mvc.method.annotation.RequestMapp
+073c: ingHandlerAdapter.invokeHandleMethod(RequestMappingHandlerAdapte
+077c: r.java:776)\r\n\tat org.springframework.web.servlet.mvc.method.a
+07bc: nnotation.RequestMappingHandlerAdapter.handleInternal(RequestMap
+07fc: pingHandlerAdapter.java:705)\r\n\tat org.springframework.web.ser
+083c: vlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHand
+087c: lerMethodAdapter.java:85)\r\n\tat org.springframework.web.servle
+08bc: t.DispatcherServlet.doDispatch(DispatcherServlet.java:959)\r\n\t
+08fc: at org.springframework.web.servlet.DispatcherServlet.doService(D
+093c: ispatcherServlet.java:893)\r\n\tat org.springframework.web.servl
+097c: et.FrameworkServlet.processRequest(FrameworkServlet.java:966)\r\
+09bc: n\tat org.springframework.web.servlet.FrameworkServlet.doPost(Fr
+09fc: ameworkServlet.java:868)\r\n\tat javax.servlet.http.HttpServlet.
+0a3c: service(HttpServlet.java:707)\r\n\tat org.springframework.web.se
+0a7c: rvlet.FrameworkServlet.service(FrameworkServlet.java:842)\r\n\ta
+0abc: t javax.servlet.http.HttpServlet.service(HttpServlet.java:790)\r
+0afc: \n\tat org.eclipse.jetty.servlet.ServletHolder.handle(ServletHol
+0b3c: der.java:867)\r\n\tat org.eclipse.jetty.servlet.ServletHandler$C
+0b7c: achedChain.doFilter(ServletHandler.java:1623)\r\n\tat org.eclips
+0bbc: e.jetty.websocket.server.WebSocketUpgradeFilter.doFilter(WebSock
+0bfc: etUpgradeFilter.java:214)\r\n\tat org.eclipse.jetty.servlet.Serv
+0c3c: letHandler$CachedChain.doFilter(ServletHandler.java:1610)\r\n\ta
+0c7c: t org.springframework.web.filter.CharacterEncodingFilter.doFilte
+0cbc: rInternal(CharacterEncodingFilter.java:85)\r\n\tat org.springfra
+0cfc: mework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFi
+0d3c: lter.java:107)\r\n\tat org.eclipse.jetty.servlet.ServletHandler$
+0d7c: CachedChain.doFilter(ServletHandler.java:1610)\r\n\tat org.sprin
+0dbc: gframework.security.web.FilterChainProxy$VirtualFilterChain.doFi
+0dfc: lter(FilterChainProxy.java:330)\r\n\tat org.springframework.secu
+0e3c: rity.web.access.intercept.FilterSecurityInterceptor.invoke(Filte
+0e7c: rSecurityInterceptor.java:118)\r\n\tat org.springframework.secur
+0ebc: ity.web.access.intercept.FilterSecurityInterceptor.doFilter(Filt
+0efc: erSecurityInterceptor.java:84)\r\n\tat org.springframework.secur
+0f3c: ity.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChain
+0f7c: Proxy.java:342)\r\n\tat org.springframework.security.web.access.
+0fbc: ExceptionTranslationFilter.doFilter(ExceptionTranslationFilter.j
+0ffc: ava:113)\r\n\tat org.springframework.security.web.FilterChainPro
+103c: xy$VirtualFilterChain.doFilter(FilterChainProxy.java:342)\r\n\ta
+107c: t org.springframework.security.web.session.SessionManagementFilt
+10bc: er.doFilter(SessionManagementFilter.java:103)\r\n\tat org.spring
+10fc: framework.security.web.FilterChainProxy$VirtualFilterChain.doFil
+113c: ter(FilterChainProxy.java:342)\r\n\tat org.springframework.secur
+117c: ity.web.authentication.AnonymousAuthenticationFilter.doFilter(An
+11bc: onymousAuthenticationFilter.java:113)\r\n\tat org.springframewor
+11fc: k.security.web.FilterChainProxy$VirtualFilterChain.doFilter(Filt
+123c: erChainProxy.java:342)\r\n\tat org.springframework.security.web.
+127c: servletapi.SecurityContextHolderAwareRequestFilter.doFilter(Secu
+12bc: rityContextHolderAwareRequestFilter.java:154)\r\n\tat org.spring
+12fc: framework.security.web.FilterChainProxy$VirtualFilterChain.doFil
+133c: ter(FilterChainProxy.java:342)\r\n\tat org.springframework.secur
+137c: ity.web.savedrequest.RequestCacheAwareFilter.doFilter(RequestCac
+13bc: heAwareFilter.java:45)\r\n\tat org.springframework.security.web.
+13fc: FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.ja
+143c: va:342)\r\n\tat org.springframework.security.web.authentication.
+147c: www.BasicAuthenticationFilter.doFilter(BasicAuthenticationFilter
+14bc: .java:150)\r\n\tat org.springframework.security.web.FilterChainP
+14fc: roxy$VirtualFilterChain.doFilter(FilterChainProxy.java:342)\r\n\
+153c: tat org.springframework.security.web.authentication.AbstractAuth
+157c: enticationProcessingFilter.doFilter(AbstractAuthenticationProces
+15bc: singFilter.java:199)\r\n\tat org.springframework.security.web.Fi
+15fc: lterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java
+163c: :342)\r\n\tat org.springframework.security.web.authentication.lo
+167c: gout.LogoutFilter.doFilter(LogoutFilter.java:110)\r\n\tat org.sp
+16bc: ringframework.security.web.FilterChainProxy$VirtualFilterChain.d
+16fc: oFilter(FilterChainProxy.java:342)\r\n\tat org.springframework.s
+173c: ecurity.web.context.request.async.WebAsyncManagerIntegrationFilt
+177c: er.doFilterInternal(WebAsyncManagerIntegrationFilter.java:50)\r\
+17bc: n\tat org.springframework.web.filter.OncePerRequestFilter.doFilt
+17fc: er(OncePerRequestFilter.java:107)\r\n\tat org.springframework.se
+183c: curity.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterCh
+187c: ainProxy.java:342)\r\n\tat org.springframework.security.web.cont
+18bc: ext.SecurityContextPersistenceFilter.doFilter(SecurityContextPer
+18fc: sistenceFilter.java:87)\r\n\tat org.springframework.security.web
+193c: .FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.j
+197c: ava:342)\r\n\tat org.springframework.security.web.FilterChainPro
+19bc: xy.doFilterInternal(FilterChainProxy.java:192)\r\n\tat org.sprin
+19fc: gframework.security.web.FilterChainProxy.doFilter(FilterChainPro
+1a3c: xy.java:160)\r\n\tat org.springframework.web.filter.DelegatingFi
+1a7c: lterProxy.invokeDelegate(DelegatingFilterProxy.java:344)\r\n\tat
+1abc:  org.springframework.web.filter.DelegatingFilterProxy.doFilter(D
+1afc: elegatingFilterProxy.java:261)\r\n\tat org.eclipse.jetty.servlet
+1b3c: .ServletHandler$CachedChain.doFilter(ServletHandler.java:1602)\r
+1b7c: \n\tat org.eclipse.jetty.servlet.ServletHandler.doHandle(Servlet
+1bbc: Handler.java:540)\r\n\tat org.eclipse.jetty.server.handler.Scope
+1bfc: dHandler.handle(ScopedHandler.java:146)\r\n\tat org.eclipse.jett
+1c3c: y.security.SecurityHandler.handle(SecurityHandler.java:548)\r\n\
+1c7c: tat org.eclipse.jetty.server.handler.HandlerWrapper.handle(Handl
+1cbc: erWrapper.java:132)\r\n\tat org.eclipse.jetty.server.handler.Sco
+1cfc: pedHandler.nextHandle(ScopedHandler.java:257)\r\n\tat org.eclips
+1d3c: e.jetty.server.session.SessionHandler.doHandle(SessionHandler.ja
+1d7c: va:1588)\r\n\tat org.eclipse.jetty.server.handler.ScopedHandler.
+1dbc: nextHandle(ScopedHandler.java:255)\r\n\tat org.eclipse.jetty.ser
+1dfc: ver.handler.ContextHandler.doHandle(ContextHandler.java:1345)\r\
+1e3c: n\tat org.eclipse.jetty.server.handler.ScopedHandler.nextScope(S
+1e7c: copedHandler.java:203)\r\n\tat org.eclipse.jetty.servlet.Servlet
+1ebc: Handler.doScope(ServletHandler.java:480)\r\n\tat org.eclipse.jet
+1efc: ty.server.session.SessionHandler.doScope(SessionHandler.java:155
+1f3c: 7)\r\n\tat org.eclipse.jetty.server.handler.ScopedHandler.nextSc
+1f7c: ope(ScopedHandler.java:201)\r\n\tat org.eclipse.jetty.server.han
+1fbc: dler.ContextHandler.doScope(ContextHandler.java:1247)\r\n\tat or
+1ffc: g.eclipse.jetty.server.handler.ScopedHandler.handle(ScopedHandle
+203c: r.java:144)\r\n\tat org.eclipse.jetty.server.handler.ContextHand
+207c: lerCollection.handle(ContextHandlerCollection.java:220)\r\n\tat 
+20bc: org.eclipse.jetty.server.handler.HandlerCollection.handle(Handle
+20fc: rCollection.java:126)\r\n\tat org.eclipse.jetty.server.handler.H
+213c: andlerWrapper.handle(HandlerWrapper.java:132)\r\n\tat org.eclips
+217c: e.jetty.server.Server.handle(Server.java:502)\r\n\tat org.eclips
+21bc: e.jetty.server.HttpChannel.handle(HttpChannel.java:364)\r\n\tat 
+21fc: org.eclipse.jetty.server.HttpConnection.onFillable(HttpConnectio
+223c: n.java:260)\r\n\tat org.eclipse.jetty.io.AbstractConnection$Read
+227c: Callback.succeeded(AbstractConnection.java:305)\r\n\tat org.ecli
+22bc: pse.jetty.io.FillInterest.fillable(FillInterest.java:103)\r\n\ta
+22fc: t org.eclipse.jetty.io.ChannelEndPoint$2.run(ChannelEndPoint.jav
+233c: a:118)\r\n\tat org.eclipse.jetty.util.thread.QueuedThreadPool.ru
+237c: nJob(QueuedThreadPool.java:765)\r\n\tat org.eclipse.jetty.util.t
+23bc: hread.QueuedThreadPool$2.run(QueuedThreadPool.java:683)\r\n\tat 
+23fc: java.lang.Thread.run(Thread.java:748)\r\nCaused by: org.apache.p
+243c: dfbox.preflight.exception.SyntaxValidationException\r\n\tat org.
+247c: apache.pdfbox.preflight.parser.PreflightParser.parse(PreflightPa
+24bc: rser.java:257)\r\n\tat org.apache.pdfbox.preflight.parser.Prefli
+24fc: ghtParser.parse(PreflightParser.java:234)\r\n\tat org.apache.pdf
+253c: box.preflight.parser.PreflightParser.parse(PreflightParser.java:
+257c: 222)\r\n\tat ru.intertrust.cmjext.dom.pdf.checkpdf.ServiceCheckP
+25bc: df.checkFile(ServiceCheckPdf.java:127)\r\n\t... 82 more\r\nCause
+25fc: d by: java.io.IOException: Error: Header doesn't contain version
+263c: info\r\n\tat org.apache.pdfbox.pdfparser.PDFParser.parse(PDFPars
+267c: er.java:221)\r\n\tat org.apache.pdfbox.preflight.parser.Prefligh
+26bc: tParser.parse(PreflightParser.java:252)\r\n\t... 85 more\r\n\r\n
+26fc: \n\n***\n\n"
+270a: }
+== Info: Connection #0 to host localhost left intact

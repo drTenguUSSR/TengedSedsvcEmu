@@ -1,0 +1,17 @@
+spring:
+    application:
+          name: sedSvcEmuBackEnd3
+    devtools:
+        add-properties: false
+        livereload:
+            port: 35730
+            enabled: false
+
+logging:
+    config: "config/log4j2.yaml"
+
+sedSvc:
+    simpleDebug: true
+
+server:
+    port: 8071
