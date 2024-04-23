@@ -55,7 +55,7 @@ class RootController(
         @RequestParam("file") files: List<MultipartFile>?,
         request: HttpServletRequest,
         response: HttpServletResponse
-    )  {
+    ) {
         logger.debug { "execRequest-beg" }
         logger.debug { "execRequest-params [" }
         logger.debug { "- command=$paramCommand" }
@@ -83,7 +83,7 @@ class RootController(
             logger.error { msg }
             throw ResponseStatusException(HttpStatus.BAD_REQUEST, msg)
         }
-        mainDataConvertor.writeResponse(result,response)
+        mainDataConvertor.writeResponse(result, response)
         logger.debug { "execRequest-end" }
     }
 

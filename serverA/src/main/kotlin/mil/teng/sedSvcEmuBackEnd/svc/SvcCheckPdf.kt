@@ -1,10 +1,7 @@
 package mil.teng.sedSvcEmuBackEnd.svc
 
 import io.github.oshai.kotlinlogging.KotlinLogging
-import mil.teng.sedSvcEmuBackEnd.rest.AbstractCommandProcessor
-import mil.teng.sedSvcEmuBackEnd.rest.CheckPdfResponse
-import mil.teng.sedSvcEmuBackEnd.rest.CommonResourceRequest
-import mil.teng.sedSvcEmuBackEnd.rest.UnifiedResult
+import mil.teng.sedSvcEmuBackEnd.rest.*
 import org.springframework.stereotype.Service
 
 /**
@@ -19,9 +16,9 @@ class SvcCheckPdf(
 
     val logger = KotlinLogging.logger {}
 
-    override fun execute(request: CommonResourceRequest): UnifiedResult {
+    override fun execute(request: CommonResourceRequest): CommonResourceResponse {
         logger.warn { "executed. called for request.class=${request::class.java.canonicalName}" }
-        val stamps = mutableListOf<CheckPdfResponse.CheckStampInfo>()
+        //val stamps = mutableListOf<CheckPdfResponse.CheckStampInfo>()
 
         val stampReg = CheckPdfResponse.Info(
             "[МЕСТО ДЛЯ ШТАМПА]", 1, 15, 15, 5, 66
@@ -31,6 +28,6 @@ class SvcCheckPdf(
 
         var fileResult = CheckPdfResponse.CheckStampInfo("example-svcCheckPdf.pdf", true, null, stampReg, listOf(signA, signB), null)
         val objResult = CheckPdfResponse(listOf(fileResult))
-        return UnifiedResult(objResult, null)
+        return objResult
     }
 }

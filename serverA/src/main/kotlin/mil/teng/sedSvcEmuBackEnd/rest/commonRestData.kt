@@ -1,9 +1,12 @@
 package mil.teng.sedSvcEmuBackEnd.rest
 
+import com.fasterxml.jackson.annotation.JsonIgnore
 import jakarta.servlet.http.HttpServletResponse
+import mil.teng.sedSvcEmuBackEnd.loggerTop
+import java.io.File
 import java.time.Instant
 import java.time.LocalDateTime
-import java.util.Date
+import java.util.*
 
 
 /**
@@ -11,16 +14,11 @@ import java.util.Date
  */
 
 //Root response info
-@ContentType(RestLinkCollection.contentType)
+@ContentType("application/vnd.intertrust.cm.collection+json;type=link")
 class RestLinkCollection(
     val title: String,
-    val entry: List<RelationLink>,
-    override val fileLinks: List<CommonResourceResponse.Name2Href>? = null
-) : CommonResourceResponse {
-    companion object {
-        const val contentType = "application/vnd.intertrust.cm.collection+json;type=link"
-    }
-}
+    val entry: List<RelationLink>
+) : CommonResourceResponse
 
 class RelationLink(val rel: String, val href: String, val title: String = "no-title")
 
@@ -29,10 +27,10 @@ class RelationLink(val rel: String, val href: String, val title: String = "no-ti
 @ContentType("application/vnd.intertrust.cm.sedsvc+json;type=word2pdf-response")
 class Word2PdfResponse(
     val nameConversion: Map<String, String>,
-    //? @JsonIgnore
-    val attachments: List<UniFileTransfer>, //?
-    override val fileLinks: List<CommonResourceResponse.Name2Href>?
-) : CommonResourceResponse
+    @JsonIgnore
+    override val attachments: List<UniFileTransfer>,
+    override val fileHrefLink: List<CommonResourceResponse.Name2Href>?
+) : CommonResourceResponse, CommonResourceResponse.HasAttachments
 
 // svcCheckPdf request-response
 @ContentType("application/vnd.intertrust.cm.sedsvc+json;type=svcCheckPdf-request")
@@ -40,8 +38,7 @@ class CheckPdfRequest(val markers: List<String>, val skipPDFA1check: Boolean, ov
 
 @ContentType("application/vnd.intertrust.cm.sedsvc+json;type=svcCheckPdf-response")
 class CheckPdfResponse(
-    val checkStampInfos: List<CheckStampInfo>,
-    override val fileLinks: List<CommonResourceResponse.Name2Href>? = null
+    val checkStampInfos: List<CheckStampInfo>
 ) : CommonResourceResponse {
     data class CheckStampInfo(
         val fileName: String,
@@ -80,8 +77,11 @@ class RegSignStampRequest(
 }
 
 @ContentType("application/vnd.intertrust.cm.sedsvc+json;type=svcMakeStamp-response")
-class RegSignStampResponse(val errors: List<Errors>?, override val fileLinks: List<CommonResourceResponse.Name2Href>?) :
-    CommonResourceResponse {
+class RegSignStampResponse(
+    val errors: List<Errors>?,
+    @JsonIgnore
+    override val attachments: List<UniFileTransfer>?
+) : CommonResourceResponse, CommonResourceResponse.HasAttachments {
 
     data class Errors(val id: String, val errorMessage: String)
 }
@@ -92,34 +92,59 @@ data class SimpleText(val textA: String, val textB: String, val textC: String?, 
 
 // common request-response info
 /**
- * информация о всех командных бинах в приложении
+ * Информация о всех командных бинах в приложении
  * @param mapBeans - отображение command на конкретный bean (для маршрутизации запросов)
  * @param mapRelations - отображение command на конкретный relation (для построения корневого ответа)
  */
-data class CommandsBeanInfo(val mapBeans: Map<String,AbstractCommandProcessor>, val mapRelations: Map<String,String>)
-
-/**
- * общий тип данных, который возвращают все командные бины
- */
-data class UnifiedResult(val mainData: CommonResourceResponse, val attachments: List<UniFileTransfer>?)
+data class CommandsBeanInfo(val mapBeans: Map<String, AbstractCommandProcessor>, val mapRelations: Map<String, String>)
 
 open class StampInfo(val pageNum: Int, val topLeft_x: Int, val topLeft_y: Int, val height: Int, val width: Int)
 
 /**
- * @param logicalName - логическое имея. могут присутствовать некоректные символы
+ * @param logicalName - логическое имея. Могут присутствовать некорректные символы
  * @param localFolder - локальная папка на сервере, где хранится файл
  * @param localName - фактическое имя файла на диске
  */
 data class UniFileTransfer(val logicalName: String, val localFolder: String, val localName: String) //?? localFolder
 
+/**
+ * Тип, который должны имплементировать все бины, чтобы отображаться в entryPoint
+ */
 interface AbstractCommandProcessor {
+    /**
+     * Человеко-читаемое имя бина. Отображается в entry-point
+     */
     val commandName: String
+
+    /**
+     * Суффикс relation-ссылки. Отображается в entry-point
+     */
     val commandRelationSuffix: String
-    fun execute(request: CommonResourceRequest): UnifiedResult
+    fun execute(request: CommonResourceRequest): CommonResourceResponse
 }
 
 interface CommonResourceResponse : CommonResource {
-    val fileLinks: List<Name2Href>?
+    interface HasAttachments {
+        val attachments: List<UniFileTransfer>?
+        val fileHrefLink: List<Name2Href>? get() = convertAttachments(attachments)
+
+        private fun convertAttachments(attachments: List<UniFileTransfer>?): List<Name2Href>? {
+            loggerTop.debug { "convertAttachments-beg" }
+            if (attachments == null) {
+                return null
+            }
+            val res = mutableListOf<Name2Href>()
+
+            attachments.forEachIndexed { index, attach ->
+                loggerTop.debug { "iterate index=$index. ${attach.logicalName}" }
+                val fileInfo = Name2Href(attach.logicalName, attach.localName)
+                res.add(fileInfo)
+            }
+            loggerTop.debug { "convertAttachments-end" }
+            return res.toList()
+        }
+
+    }
 
     data class Name2Href(val logicalName: String, val href: String)
 }
@@ -136,5 +161,7 @@ interface CommonResource {
 
 interface MainDataConvertor {
     fun readExt(mainData: String, contentType: String): CommonResourceRequest
-    fun writeResponse(domObj: UnifiedResult, response: HttpServletResponse)
+    fun writeResponse(dataResp: CommonResourceResponse, response: HttpServletResponse)
 }
+
+fun getTempFolder(): File = File(System.getProperty("java.io.tmpdir"))

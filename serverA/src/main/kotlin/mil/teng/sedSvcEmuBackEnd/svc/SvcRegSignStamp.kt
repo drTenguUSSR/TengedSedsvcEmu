@@ -18,22 +18,22 @@ class SvcRegSignStamp(
     val logger = KotlinLogging.logger {}
     val clazz = this::class.java
 
-    override fun execute(request: CommonResourceRequest): UnifiedResult {
+    override fun execute(request: CommonResourceRequest): CommonResourceResponse {
         logger.warn { "executed. called for request.class=${request::class.java.canonicalName}" }
-        var objResult = RegSignStampResponse(null, null)
-        val files = mutableListOf<UniFileTransfer>()
+        logger.warn { "creating images files, based on request parameters. fake for now" }
+
         val resultFolder = makeTempSubfolder("reg-result-")
         val fileReg="reg.png"
         fakeCopy(fileReg, "example-reg-sign-stamp", resultFolder)
-        val fileSig="reg.png"
+        val fileSig="sign.png"
         fakeCopy(fileSig, "example-reg-sign-stamp", resultFolder)
 
-        val resFileReg = UniFileTransfer(fileReg, resultFolder.getName(), fileReg)
-        files.add(resFileReg)
-        val resFileSig = UniFileTransfer(fileSig, resultFolder.getName(), fileSig)
-        files.add(resFileSig)
-
-        return UnifiedResult(objResult, files)
+        var attachments = mutableListOf<UniFileTransfer>()
+        attachments.add(UniFileTransfer(fileReg,resultFolder.name,fileReg))
+        attachments.add(UniFileTransfer(fileSig,resultFolder.name,fileSig))
+        var objResult = RegSignStampResponse(null, attachments)
+        logger.debug { "execute. files=$attachments" }
+        return objResult
     }
 
     private fun fakeCopy(fileName: String, srcFolder: String, resultFolder: File) {
@@ -55,11 +55,5 @@ class SvcRegSignStamp(
         }
         logger.debug { "temp folder ${folder.absolutePath} created" }
         return folder
-    }
-
-    private fun getTempFolder(): File {
-        val res = File(System.getProperty("java.io.tmpdir"))
-        logger.debug { "using temp=${res.absolutePath}" }
-        return res
     }
 }

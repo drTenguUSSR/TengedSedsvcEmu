@@ -16,7 +16,7 @@ import org.springframework.http.HttpOutputMessage
 import org.springframework.http.MediaType
 import org.springframework.http.converter.HttpMessageConverter
 import org.springframework.stereotype.Service
-import java.io.ByteArrayOutputStream
+import java.io.*
 import java.nio.charset.StandardCharsets
 import java.util.*
 
@@ -125,33 +125,32 @@ class DtoConverter(
     }
 
 
-    override fun writeResponse(domObj: UnifiedResult, response: HttpServletResponse) {
-        //TODO: вывод файлов-результатов в response
-        val attachments = domObj.attachments
-        val fileLinks = mutableListOf<CommonResourceResponse.Name2Href>()
-        logger.debug { "writeResponse beg. attachments=$attachments" }
-        attachments?.let {
-            logger.debug { "found (${it.size}) files [" }
-            for (attachment in it) {
-                logger.debug { "- file: ${attachment.localFolder} ${attachment.logicalName}" }
-                //TODO: добавить вариант с doZip упаковкой ответа ???
-                val fileHref = attachment.localName
-                val fileData = CommonResourceResponse.Name2Href(attachment.logicalName, fileHref)
-                fileLinks.add(fileData)
-            }
-            logger.debug { "]" }
-        }
-        //domObj: как-то сложить fileLinks в UnifiedResult или убрать поле fileLinks из UnifiedResult
-        // запись main-data
+    override fun writeResponse(dataResp: CommonResourceResponse, response: HttpServletResponse) {
+        logger.debug { "writeResponse beg. dataResp=$dataResp" }
         val mpr = MultipartResponse(response)
         val out = response.outputStream
 
-        val contentStream: ByteArrayOutputStream = serialize(domObj.mainData)
+        val contentStream: ByteArrayOutputStream = serialize(dataResp)
 
-        var ct = svcContentType.class2contentType(domObj.mainData::class)
-        mpr.partBegin(ct, null, contentStream.size().toLong())
+        val ctMain = svcContentType.class2contentType(dataResp::class)
+        mpr.partBegin(ctMain, null, contentStream.size().toLong())
         contentStream.writeTo(out)
         mpr.partEnd()
+        if (dataResp is CommonResourceResponse.HasAttachments && dataResp.attachments != null && dataResp.attachments!!.isNotEmpty()) {
 
+            for (attachment in dataResp.attachments!!) {
+                val ctFile = "application/octet-stream"
+                val dataFile = File(getTempFolder(), attachment.localFolder + "/" + attachment.localName)
+                if (!dataFile.exists()) {
+                    throw IllegalStateException("failed file ${dataFile.absolutePath} not exits")
+                }
+                val fileLen = dataFile.length()
+                logger.debug { "file: ${dataFile.absolutePath} len=$fileLen" }
+                mpr.partBegin(ctFile, attachment.localName, fileLen)
+                BufferedInputStream(FileInputStream(dataFile)).use { fis -> fis.copyTo(out) }
+                mpr.partEnd()
+            }
+        }
+        mpr.finish()
     }
 }
