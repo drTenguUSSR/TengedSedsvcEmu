@@ -29,21 +29,28 @@ class RootController(
     }
 
     @GetMapping
-    fun getRoot(response: HttpServletResponse): RestLinkCollection {
-        logger.debug { "getRoot called" }
+    fun getRoot(request: HttpServletRequest, response: HttpServletResponse): RestLinkCollection {
+        val baseUrl = request.requestURL.toString()
+        logger.debug { "getRoot called. request.url=${baseUrl}" }
         val links = mutableListOf<RelationLink>()
-        val res = RestLinkCollection("sedSvcEmu root title", links)
-        for (i1 in 1..10) {
-            val rel = CommonResource.BASIC_NAME_RELATION_BASE + "relations#word2pdf"
-            val href = "http://localhost:8070/ext-sedsvc/upload-m/?command=$i1"
-            val title = "title-$i1"
-            val link = RelationLink(rel, href, title)
+
+        commandsBeanInfo.mapRelations.forEach { (cmdKey, cmdVal) ->
+            logger.debug { "- iterate: key=!$cmdKey! val=!$cmdVal!" }
+            val relSuffix = commandsBeanInfo.mapBeans[cmdKey]?.commandRelationSuffix
+                ?: throw IllegalStateException("mapBeans for key=$cmdKey not found")
+            val relFull = CommonResource.BASIC_NAME_RELATION_BASE + relSuffix
+            val href = "$baseUrl/execRequest?command=$cmdKey"
+            val title = "title for $cmdKey $cmdVal"
+            val link = RelationLink(relFull, href, title)
             links.add(link)
+
         }
+
         //TODO: use special-annotation for CORS
         response.addHeader("Access-Control-Allow-Origin", "*")
         logger.debug { "getRoot end" }
 
+        val res = RestLinkCollection("sedSvcEmu root title", links)
         return res
     }
 
@@ -85,26 +92,6 @@ class RootController(
         }
         mainDataConvertor.writeResponse(result, response)
         logger.debug { "execRequest-end" }
-    }
-
-    @GetMapping("/test-a")
-    fun getTestA(): SimpleText {
-        val res = SimpleText(
-            "textA1 123 123 123 123 123 123 123 123 123 123 123 123 123 123 123 123 123 endA",
-            "textB1 123 123 123 123 123 123 123 123 123 123 123 123 123 123 123 123 123 endB",
-            null,
-            Instant.now(),
-            LocalDateTime.now()
-        )
-        logger.debug { "getTestA: return res=[$res]" }
-        return res
-    }
-
-    @PostMapping("/test-a")
-    fun postTestA(@RequestBody requestData: SimpleText): SimpleText {
-        logger.debug { "postTestA:!$requestData!" }
-        val res = SimpleText("txtA", "txtB", "txtC", null, null)
-        return res;
     }
 }
 

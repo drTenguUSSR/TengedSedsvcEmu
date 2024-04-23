@@ -1,0 +1,1 @@
+curl -vvv -X POST -H "Content-Type: application/json-simple-text" -d "@postA-simple.json" http://localhost:8071/api-a/testTwo

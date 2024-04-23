@@ -4,9 +4,9 @@ import io.github.oshai.kotlinlogging.KotlinLogging
 import jakarta.servlet.http.HttpServletResponse
 import mil.teng.sedSvcEmuBackEnd.rest.*
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
+import java.time.Instant
+import java.time.LocalDateTime
 
 /**
  * @author DrTengu, 2024/04
@@ -35,5 +35,25 @@ class RootControllerA(private val contentTypeDataService: ContentTypeDataService
         logger.debug { "getRoot end" }
 
         return contentTypeDataService.makeSedSvcResponse(res)
+    }
+
+    @GetMapping("/testOne")
+    fun getTestA(): SimpleText {
+        val res = SimpleText(
+            "textA1 123 123 123 123 123 123 123 123 123 123 123 123 123 123 123 123 123 endA",
+            "textB1 123 123 123 123 123 123 123 123 123 123 123 123 123 123 123 123 123 endB",
+            null,
+            Instant.now(),
+            LocalDateTime.now()
+        )
+        logger.debug { "getTestA: return res=[$res]" }
+        return res
+    }
+
+    @PostMapping("/testTwo")
+    fun postTestA(@RequestBody requestData: SimpleText): SimpleText {
+        logger.debug { "postTestA:!$requestData!" }
+        val res = SimpleText("txtA", "txtB", "txtC", null, null)
+        return res;
     }
 }

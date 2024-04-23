@@ -1,1 +1,0 @@
-curl -vvv -X POST -H "Content-Type: application/json-special" -d "@post-test-a.json" http://localhost:8071/api/test-a
