@@ -9,8 +9,14 @@ import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
 import org.springframework.web.server.ResponseStatusException
+import java.io.File
+import java.io.FileInputStream
+import java.security.MessageDigest
 import java.time.Instant
-import java.time.LocalDateTime
+import java.util.*
+import kotlin.text.HexFormat
+
+private const val FILE_BUFFER_LEN = 4096
 
 @RestController
 @RequestMapping("/api")
@@ -71,15 +77,34 @@ class RootController(
         logger.debug { "$mainData" }
         logger.debug { "- ]" }
         logger.debug { "files size=${files?.size} [" }
+        val attachments = mutableListOf<UniFileTransfer>()
+
+        val buffer = ByteArray(FILE_BUFFER_LEN)
+        val sumMd5 = MessageDigest.getInstance("MD5")
+        val sumExt = MessageDigest.getInstance("SHA1")
+
         files?.let {
+            val srcFolder = makeTempSubfolder("src-")
+            logger.debug { "created src folder as '$srcFolder'" }
             for (itemF in files) {
-                logger.debug { "- ${itemF.name}, len=${itemF.size}, type=${itemF.contentType}, origin=$itemF" }
+                val uuKey = UUID.randomUUID().toString()
+
+                logger.debug { "- ${itemF.name}, len=${itemF.size}, type=${itemF.contentType}, origin='${itemF.originalFilename}'" }
+                val originFileName = itemF.originalFilename ?: "data$uuKey.bin"
+                val originExt = File(originFileName).extension
+
+                val localFile = File(srcFolder, "$uuKey.$originExt")
+                logger.debug { "- - use localFile=$localFile" }
+
+                itemF.transferTo(localFile)
+
+                logger.debug { "- - ${calcFileCheck(localFile,buffer,sumMd5,sumExt)}" }
+
+                val uniDat = UniFileTransfer(originFileName, srcFolder.absolutePath, localFile.name)
+                attachments.add(uniDat)
             }
         }
         logger.debug { "]" }
-
-        val attachments = listOf<UniFileTransfer>()
-        //TODO: пропускаем файлы. переделать на выгрузку во временнную папку как List<UniFileTransfer> attachments
 
         val mainDataObj = mainDataConvertor.readExt(mainData, contentType)
         logger.debug { "mainDataObj: $mainDataObj" }
@@ -93,5 +118,23 @@ class RootController(
         mainDataConvertor.writeResponse(result, response)
         logger.debug { "execRequest-end" }
     }
+
+    @OptIn(ExperimentalStdlibApi::class)
+    private fun calcFileCheck(localFile: File, buffer: ByteArray, sumMd5: MessageDigest, sumExt: MessageDigest): String {
+        sumMd5.reset()
+        sumExt.reset()
+        FileInputStream(localFile).use { fis ->
+            var count = fis.read(buffer, 0, FILE_BUFFER_LEN)
+            while (count != -1) {
+                sumMd5.update(buffer, 0, count)
+                sumExt.update(buffer, 0, count)
+                count = fis.read(buffer, 0, FILE_BUFFER_LEN)
+            }
+            val resMd5 = sumMd5.digest().toHexString(HexFormat.UpperCase)
+            val resExt = sumExt.digest().toHexString(HexFormat.UpperCase)
+            return "md5:$resMd5,sha1:$resExt"
+        }
+    }
+
 }
 

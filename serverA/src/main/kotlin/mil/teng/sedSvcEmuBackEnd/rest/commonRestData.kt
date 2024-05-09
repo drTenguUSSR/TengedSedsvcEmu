@@ -102,10 +102,10 @@ open class StampInfo(val pageNum: Int, val topLeft_x: Int, val topLeft_y: Int, v
 
 /**
  * @param logicalName - логическое имея. Могут присутствовать некорректные символы
- * @param localFolder - локальная папка на сервере, где хранится файл
+ * @param localFolder - локальная папка на сервере, где хранится файл (полный путь к папке)
  * @param localName - фактическое имя файла на диске
  */
-data class UniFileTransfer(val logicalName: String, val localFolder: String, val localName: String) //?? localFolder
+data class UniFileTransfer(val logicalName: String, val localFolder: String, val localName: String)
 
 /**
  * Тип, который должны имплементировать все бины, чтобы отображаться в entryPoint
@@ -165,3 +165,17 @@ interface MainDataConvertor {
 }
 
 fun getTempFolder(): File = File(System.getProperty("java.io.tmpdir"))
+
+fun makeTempSubfolder(folderSuffix: String): File {
+    //TODO: use kotlin.io.path.createTempDirectory() ?
+    val folder = File(getTempFolder(), folderSuffix + System.currentTimeMillis())
+    if (folder.exists()) {
+        throw RuntimeException("folder ${folder.absolutePath} must not exist")
+    }
+    val chkFolder = folder.mkdirs()
+    if (!chkFolder) {
+        throw RuntimeException("failed to create ${folder.absolutePath}")
+    }
+    loggerTop.debug { "temp folder ${folder.absolutePath} created" }
+    return folder
+}

@@ -44,16 +44,4 @@ class SvcRegSignStamp(
         logger.debug { "fakeCopy: $fileName -> ${dat1.absolutePath}, size=${dat1.length()}" }
     }
 
-    private fun makeTempSubfolder(folderSuffix: String): File {
-        val folder = File(getTempFolder(), folderSuffix + System.currentTimeMillis())
-        if (folder.exists()) {
-            throw RuntimeException("folder ${folder.absolutePath} must not exist")
-        }
-        val chkFolder = folder.mkdirs()
-        if (!chkFolder) {
-            throw RuntimeException("failed to create ${folder.absolutePath}")
-        }
-        logger.debug { "temp folder ${folder.absolutePath} created" }
-        return folder
-    }
 }
