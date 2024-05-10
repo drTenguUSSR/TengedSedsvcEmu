@@ -18,19 +18,19 @@ class SvcRegSignStamp(
     val logger = KotlinLogging.logger {}
     val clazz = this::class.java
 
-    override fun execute(request: CommonResourceRequest): CommonResourceResponse {
+    override fun execute(request: CommonResourceRequest, requestAttachments: List<UniFileTransfer>): CommonResourceResponse {
         logger.warn { "executed. called for request.class=${request::class.java.canonicalName}" }
         logger.warn { "creating images files, based on request parameters. fake for now" }
 
         val resultFolder = makeTempSubfolder("reg-result-")
-        val fileReg="reg.png"
+        val fileReg = "reg.png"
         fakeCopy(fileReg, "example-reg-sign-stamp", resultFolder)
-        val fileSig="sign.png"
+        val fileSig = "sign.png"
         fakeCopy(fileSig, "example-reg-sign-stamp", resultFolder)
 
         var attachments = mutableListOf<UniFileTransfer>()
-        attachments.add(UniFileTransfer(fileReg,resultFolder.name,fileReg))
-        attachments.add(UniFileTransfer(fileSig,resultFolder.name,fileSig))
+        attachments.add(UniFileTransfer(fileReg, resultFolder.name, fileReg))
+        attachments.add(UniFileTransfer(fileSig, resultFolder.name, fileSig))
         var objResult = RegSignStampResponse(null, attachments)
         logger.debug { "execute. files=$attachments" }
         return objResult

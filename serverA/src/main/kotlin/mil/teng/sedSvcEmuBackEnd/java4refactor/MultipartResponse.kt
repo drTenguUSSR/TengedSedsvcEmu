@@ -10,21 +10,20 @@ import java.util.concurrent.ThreadLocalRandom
 /**
  * @author DrTengu, 2024/04
  */
+
+/**
+ * Формирование MultipartResponse ответа для возврата из сервлета
+ * Каждая часть начинается с вызова [partBegin]
+ * и заканчивается вызовом [partEnd]
+ * все сообщение заканчивается вызовом [finish]
+ * @param response ответ
+ * @throws IOException исключение
+ */
 class MultipartResponse(var res: HttpServletResponse) {
     private val boundary: String
     var out: ServletOutputStream = res.outputStream
     var endedLastPart: Boolean = true
 
-    /**
-     * начинает выводить в исходищий поток
-     * заголовки, начинающие multipart-ответ.
-     * каждая часть начинается с вызова
-     * и заканчивается вызовом [.partEnd]
-     * все сообщение заканчивается вызовом [.finish]
-     *
-     * @param response ответ
-     * @throws IOException исключение
-     */
     init {
         boundary = generateBoundary()
         res.contentType = "multipart/mixed;boundary=$boundary"
@@ -32,7 +31,7 @@ class MultipartResponse(var res: HttpServletResponse) {
     }
 
     /**
-     * начало записи данных в виде части MultipartResponse
+     * Начало записи данных в виде части MultipartResponse
      *
      * @param contentType - тип передаваемого контента (если не указан - запишется "application/octet-stream")
      * @param attachName - (опционально) заполняется именем файла, если передается файл
@@ -49,7 +48,7 @@ class MultipartResponse(var res: HttpServletResponse) {
         }
         out.print("Content-Type: $ct$CRLF")
 
-        if (attachName!=null) {
+        if (attachName != null) {
             out.print("Content-Disposition: attachment; filename=\"${MimeUtility.encodeWord(attachName)}\"$CRLF")
         }
 

@@ -4,10 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore
 import jakarta.servlet.http.HttpServletResponse
 import mil.teng.sedSvcEmuBackEnd.loggerTop
 import java.io.File
-import java.time.Instant
-import java.time.LocalDateTime
 import java.util.*
-
 
 /**
  * @author DrTengu, 2024/04
@@ -86,10 +83,6 @@ class RegSignStampResponse(
     data class Errors(val id: String, val errorMessage: String)
 }
 
-// test data
-@ContentType("application/json-simple-text")
-data class SimpleText(val textA: String, val textB: String, val textC: String?, val dateTime: Instant?, val localDtm: LocalDateTime?)
-
 // common request-response info
 /**
  * Информация о всех командных бинах в приложении
@@ -120,7 +113,11 @@ interface AbstractCommandProcessor {
      * Суффикс relation-ссылки. Отображается в entry-point
      */
     val commandRelationSuffix: String
-    fun execute(request: CommonResourceRequest): CommonResourceResponse
+
+    /**
+     * Главная функция командного бина, который выполняет задачу
+     */
+    fun execute(request: CommonResourceRequest, requestAttachments: List<UniFileTransfer>): CommonResourceResponse
 }
 
 interface CommonResourceResponse : CommonResource {

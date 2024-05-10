@@ -79,13 +79,12 @@ class RootController(
         logger.debug { "files size=${files?.size} [" }
         val attachments = mutableListOf<UniFileTransfer>()
 
-        val buffer = ByteArray(FILE_BUFFER_LEN)
-        val sumMd5 = MessageDigest.getInstance("MD5")
-        val sumExt = MessageDigest.getInstance("SHA1")
-
         files?.let {
             val srcFolder = makeTempSubfolder("src-")
             logger.debug { "created src folder as '$srcFolder'" }
+            val buffer = ByteArray(FILE_BUFFER_LEN)
+            val sumMd5 = MessageDigest.getInstance("MD5")
+            val sumExt = MessageDigest.getInstance("SHA1")
             for (itemF in files) {
                 val uuKey = UUID.randomUUID().toString()
 
@@ -98,7 +97,7 @@ class RootController(
 
                 itemF.transferTo(localFile)
 
-                logger.debug { "- - ${calcFileCheck(localFile,buffer,sumMd5,sumExt)}" }
+                logger.debug { "- - ${calcFileCheck(localFile, buffer, sumMd5, sumExt)}" }
 
                 val uniDat = UniFileTransfer(originFileName, srcFolder.absolutePath, localFile.name)
                 attachments.add(uniDat)
@@ -110,7 +109,7 @@ class RootController(
         logger.debug { "mainDataObj: $mainDataObj" }
 
         logger.debug { "selected-bean:${commandsBeanInfo.mapBeans[paramCommand.lowercase()]}" }
-        val result = commandsBeanInfo.mapBeans[paramCommand.lowercase()]?.let { it.execute(mainDataObj) } ?: run {
+        val result = commandsBeanInfo.mapBeans[paramCommand.lowercase()]?.let { it.execute(mainDataObj,attachments.toList()) } ?: run {
             val msg = "unexpected command=$paramCommand. commandList=${commandsBeanInfo.mapBeans.keys}"
             logger.error { msg }
             throw ResponseStatusException(HttpStatus.BAD_REQUEST, msg)
