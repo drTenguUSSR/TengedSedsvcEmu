@@ -6,12 +6,9 @@ import mil.teng.sedSvcEmuBackEnd.rest.CommandsBeanInfo
 import mil.teng.sedSvcEmuBackEnd.rest.CommonResource
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
-import org.springframework.boot.web.servlet.FilterRegistrationBean
 import org.springframework.context.ApplicationContext
-import org.springframework.context.ApplicationContextAware
 import org.springframework.context.ConfigurableApplicationContext
 import org.springframework.context.annotation.Bean
-import org.springframework.web.filter.CharacterEncodingFilter
 
 
 @SpringBootApplication

@@ -2,13 +2,12 @@ package mil.teng.sedSvcEmuBackEnd.temp
 
 import mil.teng.sedSvcEmuBackEnd.rest.CommonResourceResponse
 import mil.teng.sedSvcEmuBackEnd.rest.UniFileTransfer
+import mil.teng.sedSvcEmuBackEnd.temp.RestResp.SomeResponseDto
 import kotlin.random.Random
 
 /**
  * @author DrTengu, 2024/04
  */
-class RestResp {
-}
 
 fun main() {
     xlog("beg")
@@ -29,35 +28,38 @@ fun xlog(msg: String) {
     println(msg)
 }
 
-interface Response_HasAttachments {
-    val attachments: List<UniFileTransfer>?
-    val fileHrefLink: List<CommonResourceResponse.Name2Href>? get() = convertAttachments(attachments)
+class RestResp {
 
-    fun convertAttachments(attachments: List<UniFileTransfer>?): List<CommonResourceResponse.Name2Href>? {
-        val rand = Random.nextInt(100, 200)
-        xlog("get-convertor called($rand). attachments=" + (attachments?.let { it.size } ?: "null-array"))
-        if (attachments == null) {
-            return null
+    interface Response_HasAttachments {
+        val attachments: List<UniFileTransfer>?
+        val fileHrefLink: List<CommonResourceResponse.Name2Href>? get() = convertAttachments(attachments)
+
+        fun convertAttachments(attachments: List<UniFileTransfer>?): List<CommonResourceResponse.Name2Href>? {
+            val rand = Random.nextInt(100, 200)
+            xlog("get-convertor called($rand). attachments=" + (attachments?.let { it.size } ?: "null-array"))
+            if (attachments == null) {
+                return null
+            }
+            val res = mutableListOf<CommonResourceResponse.Name2Href>()
+
+            attachments.forEachIndexed { index, attach ->
+                xlog("iterate index=$index. ${attach.logicalName}")
+                val fileInfo =
+                    CommonResourceResponse.Name2Href(attach.logicalName, "folder-$rand/${attach.localFolder}/${attach.localName}")
+                res.add(fileInfo)
+            }
+
+            return res.toList()
         }
-        val res = mutableListOf<CommonResourceResponse.Name2Href>()
+    }
 
-        attachments.forEachIndexed { index, attach ->
-            xlog("iterate index=$index. ${attach.logicalName}")
-            val fileInfo = CommonResourceResponse.Name2Href(attach.logicalName, "folder-$rand/${attach.localFolder}/${attach.localName}")
-            res.add(fileInfo)
-        }
-
-        return res.toList()
+    data class SomeResponseDto(
+        val infoA: String, val infoB: String,
+        override val attachments: List<UniFileTransfer>?,
+    ) : Response_HasAttachments {
+        val memberA: String = "memberA"
     }
 }
-
-data class SomeResponseDto(
-    val infoA: String, val infoB: String,
-    override val attachments: List<UniFileTransfer>?,
-) : Response_HasAttachments {
-    val memberA: String = "memberA"
-}
-
 
 interface DataOne {
     val dataOne: String

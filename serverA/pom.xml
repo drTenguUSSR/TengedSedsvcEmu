@@ -14,6 +14,7 @@
 	<name>sedSvcEmuBackEnd</name>
 	<description>backEnd emulator SedSvc</description>
 	<properties>
+		<start-class>mil.teng.sedSvcEmuBackEnd.SedSvcEmuBackEndApplicationKt</start-class>
 		<java.version>17</java.version>
 		<kotlin.version>1.9.22</kotlin.version>
 		<pdfbox.version>3.0.2</pdfbox.version>
@@ -49,6 +50,13 @@
 			<type>pom</type>
 			<scope>runtime</scope>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.jetbrains.kotlin/kotlin-test -->
+		<dependency>
+			<groupId>org.jetbrains.kotlin</groupId>
+			<artifactId>kotlin-test</artifactId>
+			<version>1.9.24</version>
+		</dependency>
+
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-log4j2</artifactId>
