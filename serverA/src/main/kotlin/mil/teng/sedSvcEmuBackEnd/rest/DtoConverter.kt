@@ -27,6 +27,7 @@ import java.util.*
 
 @Service
 class DtoConverter(
+    //TODO: миграция на единый ObjectMapper
     mapper: ObjectMapper,
     private val svcContentType: ContentTypeDataService,
     @Value("\${sedSvc.simpleDebug:false}") private val svcSimpleDebug: Boolean
@@ -39,6 +40,7 @@ class DtoConverter(
         logger.debug { "initComp called" }
         mapper.setDefaultPropertyInclusion(JsonInclude.Include.NON_NULL)
         mapper.enable(SerializationFeature.INDENT_OUTPUT)
+        // только для обратной совместимости
         mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
     }
 

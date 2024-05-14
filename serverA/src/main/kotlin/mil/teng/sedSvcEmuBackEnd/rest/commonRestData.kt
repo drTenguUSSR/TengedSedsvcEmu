@@ -31,10 +31,10 @@ class Word2PdfResponse(
 
 // svcCheckPdf request-response
 @ContentType("application/vnd.intertrust.cm.sedsvc+json;type=svcCheckPdf-request")
-class CheckPdfRequest(val markers: List<String>, val skipPDFA1check: Boolean, override val doZip: Boolean = false) : CommonResourceRequest
+data class CheckPdfRequest(val markers: List<String>, val skipPDFA1check: Boolean, override val doZip: Boolean = false) : CommonResourceRequest
 
 @ContentType("application/vnd.intertrust.cm.sedsvc+json;type=svcCheckPdf-response")
-class CheckPdfResponse(
+data class CheckPdfResponse(
     val checkStampInfos: List<CheckStampInfo>
 ) : CommonResourceResponse {
     data class CheckStampInfo(

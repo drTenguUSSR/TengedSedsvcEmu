@@ -15,7 +15,18 @@ class JacksonLibraryCheck {
     fun serializeBasicA() {
         val obj = FakeStampInfo("[МЕСТО ДЛЯ ПОДПИСИ]", 1, 40, 180, 20, 80)
         val res = jacksonObjectMapper().writeValueAsString(obj)
-        println("res=$res")
+        println("serializeBasicA=$res")
+    }
+
+    @Test
+    fun serializeListA() {
+        val objA = FakeStampInfo("[МЕСТО ДЛЯ ПОДПИСИ1]", 1, 41, 180, 20, 80)
+        val objB = FakeStampInfo("[МЕСТО ДЛЯ ПОДПИСИ2]", 2, 42, 180, 20, 80)
+        val objC = FakeStampInfo("[МЕСТО ДЛЯ ПОДПИСИ3]", 3, 43, 180, 20, 80)
+        val objD = FakeStampInfo("[МЕСТО ДЛЯ ПОДПИСИ4]", 4, 44, 180, 20, 80)
+        val lstObj= listOf<FakeStampInfo>(objA,objB,objC,objD)
+        val res = jacksonObjectMapper().writeValueAsString(lstObj)
+        println("serializeListA=$res")
     }
 
     @Test

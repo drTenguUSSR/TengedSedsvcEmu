@@ -26,13 +26,18 @@ class SvcCheckPdf(
     override fun execute(request: CommonResourceRequest, requestAttachments: List<UniFileTransfer>): CommonResourceResponse {
         logger.warn { "executed. called for request.class=${request::class.java.canonicalName}" }
         logger.debug { "got-attachments:$requestAttachments" }
+        val req = request as CheckPdfRequest
 
         if (requestAttachments.isEmpty()) {
             throw IllegalArgumentException("no source files")
         }
 
         val allStamps = mutableListOf<CheckPdfResponse.CheckStampInfo>()
+
         for (attach in requestAttachments) {
+            if (!req.skipPDFA1check) {
+//TODO: избежать двойного парсинга
+            }
             val stamps = processFile(attach)
             allStamps.add(stamps)
         }
