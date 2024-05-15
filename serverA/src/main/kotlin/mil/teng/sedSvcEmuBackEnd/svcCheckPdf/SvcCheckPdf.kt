@@ -9,7 +9,6 @@ import org.apache.pdfbox.preflight.exception.ValidationException
 import org.apache.pdfbox.preflight.parser.PreflightParser
 import org.springframework.stereotype.Service
 import java.io.File
-import kotlin.math.log
 
 /**
  * @author DrTengu, 2024/04
@@ -35,20 +34,15 @@ class SvcCheckPdf(
         val allStamps = mutableListOf<CheckPdfResponse.CheckStampInfo>()
 
         for (attach in requestAttachments) {
-            if (!req.skipPDFA1check) {
-//TODO: избежать двойного парсинга
-            }
-            val stamps = processFile(attach)
+            val stamps = processFile(attach, req.skipPDFA1check)
             allStamps.add(stamps)
         }
 
         return CheckPdfResponse(allStamps)
     }
 
-    private fun processFile(attach: UniFileTransfer): CheckPdfResponse.CheckStampInfo {
+    private fun processFile(attach: UniFileTransfer, skipPDFA1check: Boolean): CheckPdfResponse.CheckStampInfo {
         logger.debug { "working on ${attach.localName} from ${attach.logicalName}" }
-        val res = mutableListOf<CheckPdfResponse.CheckStampInfo>()
-
 
         val pdfFile = File(attach.localFolder, attach.localName)
         val parser = PreflightParser(pdfFile)
@@ -69,33 +63,21 @@ class SvcCheckPdf(
                     )
                 }
 
-                try {
-                    val validateResult = preflight.validate()
-                    if (!validateResult.isValid) {
-                        validateResult.errorsList?.let { errLst ->
-                            logger.error { "found errors for file ${attach.localName} from ${attach.logicalName}. count=${errLst.size} " }
-                            errLst.forEach { errOne ->
-                                logger.error { "- ${errOne.pageNumber}: ${errOne.details}" }
-                            }
-                        }
-                        return CheckPdfResponse.CheckStampInfo(
-                            attach.logicalName, false, "validation error - PDF/A error. see server log",
-                            null, null, null
-                        )
+                logger.debug { if (skipPDFA1check) "pdf-validating:skip" else "pdf-validating:exec" }
+                if (!skipPDFA1check) {
+                    val checkResult=execPDFA1validating(preflight, attach)
+                    if (checkResult!=null) {
+                       return checkResult
                     }
-                } catch (ex: ValidationException) {
-                    return CheckPdfResponse.CheckStampInfo(
-                        attach.logicalName, false, "validation error exception: ${ex.message}",
-                        null, null, null
-                    )
-                }
 
+
+                }
                 val docInfo = preflight.documentInformation
-                logger.debug { "title=${docInfo.title}"}
+                logger.debug { "title=${docInfo.title}" }
                 logger.debug { "keywords=${docInfo.keywords}" }
                 logger.debug { "subj=${docInfo.subject}" }
                 logger.debug { "keys=${docInfo.metadataKeys}" }
-                
+
 
             }
         } catch (ex: SyntaxValidationException) {
@@ -119,4 +101,33 @@ class SvcCheckPdf(
 
         return fileInfo
     }
+
+    /**
+     * Выполняет проверку переданного распарсенного PDF/A-1 документа
+     * @return null, если нет ошибок или ошибку (в CheckPdfResponse.CheckStampInfo)
+     */
+    private fun execPDFA1validating(preflight: PreflightDocument, attach: UniFileTransfer): CheckPdfResponse.CheckStampInfo? {
+        try {
+            val validateResult = preflight.validate()
+            if (!validateResult.isValid) {
+                validateResult.errorsList?.let { errLst ->
+                    logger.error { "found errors for file ${attach.localName} from ${attach.logicalName}. count=${errLst.size} " }
+                    errLst.forEach { errOne ->
+                        logger.error { "- ${errOne.pageNumber}: ${errOne.details}" }
+                    }
+                }
+                return CheckPdfResponse.CheckStampInfo(
+                    attach.logicalName, false, "validation error - PDF/A error. see server log",
+                    null, null, null
+                )
+            }
+        } catch (ex: ValidationException) {
+            return CheckPdfResponse.CheckStampInfo(
+                attach.logicalName, false, "validation error exception: ${ex.message}",
+                null, null, null
+            )
+        }
+        return null
+    }
+
 }
