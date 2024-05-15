@@ -1,4 +1,4 @@
-package mil.teng.sedSvcEmuBackEnd.svcCheckPdf
+package mil.teng.sedSvcEmuBackEnd.direct
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.exc.MismatchedInputException
@@ -9,8 +9,13 @@ import kotlin.test.assertFailsWith
 /**
  * @author DrTengu, 2024/05
  */
-class JacksonLibraryCheck {
 
+/**
+ * Не используется общий подход для получения objectMapper
+ */
+private data class FakeStampInfo(val marker: String, val pageNum: Int, val topLeft_x: Int, val topLeft_y: Int, val height: Int, val width: Int)
+
+class JacksonLibraryCheck {
     @Test
     fun serializeBasicA() {
         val obj = FakeStampInfo("[МЕСТО ДЛЯ ПОДПИСИ]", 1, 40, 180, 20, 80)

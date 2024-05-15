@@ -13,10 +13,9 @@ import kotlin.test.assertFailsWith
  * @author DrTengu, 2024/05
  */
 
-data class FakeStampInfo(val marker: String, val pageNum: Int, val topLeft_x: Int, val topLeft_y: Int, val height: Int, val width: Int)
+private data class FakeStampInfo(val marker: String, val pageNum: Int, val topLeft_x: Int, val topLeft_y: Int, val height: Int, val width: Int)
 
 class FakeStampInfoTest {
-
     @Test
     fun decodeEmptyJson() {
         val param = "{}"

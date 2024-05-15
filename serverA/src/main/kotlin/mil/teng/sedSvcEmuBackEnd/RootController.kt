@@ -16,8 +16,6 @@ import java.time.Instant
 import java.util.*
 import kotlin.text.HexFormat
 
-private const val FILE_BUFFER_LEN = 4096
-
 @RestController
 @RequestMapping("/api")
 class RootController(
@@ -109,7 +107,7 @@ class RootController(
         logger.debug { "mainDataObj: $mainDataObj" }
 
         logger.debug { "selected-bean:${commandsBeanInfo.mapBeans[paramCommand.lowercase()]}" }
-        val result = commandsBeanInfo.mapBeans[paramCommand.lowercase()]?.let { it.execute(mainDataObj,attachments.toList()) } ?: run {
+        val result = commandsBeanInfo.mapBeans[paramCommand.lowercase()]?.let { it.execute(mainDataObj, attachments.toList()) } ?: run {
             val msg = "unexpected command=$paramCommand. commandList=${commandsBeanInfo.mapBeans.keys}"
             logger.error { msg }
             throw ResponseStatusException(HttpStatus.BAD_REQUEST, msg)
@@ -133,6 +131,10 @@ class RootController(
             val resExt = sumExt.digest().toHexString(HexFormat.UpperCase)
             return "md5:$resMd5,sha1:$resExt"
         }
+    }
+
+    companion object {
+        private const val FILE_BUFFER_LEN = 4096
     }
 
 }

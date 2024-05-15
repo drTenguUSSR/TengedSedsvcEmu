@@ -34,14 +34,14 @@ class SvcCheckPdf(
         val allStamps = mutableListOf<CheckPdfResponse.CheckStampInfo>()
 
         for (attach in requestAttachments) {
-            val stamps = processFile(attach, req.skipPDFA1check)
+            val stamps = processFile(attach, req)
             allStamps.add(stamps)
         }
 
         return CheckPdfResponse(allStamps)
     }
 
-    private fun processFile(attach: UniFileTransfer, skipPDFA1check: Boolean): CheckPdfResponse.CheckStampInfo {
+    private fun processFile(attach: UniFileTransfer, req: CheckPdfRequest): CheckPdfResponse.CheckStampInfo {
         logger.debug { "working on ${attach.localName} from ${attach.logicalName}" }
 
         val pdfFile = File(attach.localFolder, attach.localName)
@@ -63,11 +63,11 @@ class SvcCheckPdf(
                     )
                 }
 
-                logger.debug { if (skipPDFA1check) "pdf-validating:skip" else "pdf-validating:exec" }
-                if (!skipPDFA1check) {
-                    val checkResult=execPDFA1validating(preflight, attach)
-                    if (checkResult!=null) {
-                       return checkResult
+                logger.debug { if (req.skipPDFA1check) "pdf-validating:skip" else "pdf-validating:exec" }
+                if (!req.skipPDFA1check) {
+                    val checkResult = execPDFA1validating(preflight, attach)
+                    if (checkResult != null) {
+                        return checkResult
                     }
 
 
