@@ -163,6 +163,9 @@ interface MainDataConvertor {
 
 fun getTempFolder(): File = File(System.getProperty("java.io.tmpdir"))
 
+/**
+ * Создает временную папку и возвращает её.
+ */
 fun makeTempSubfolder(folderSuffix: String): File {
     //TODO: use kotlin.io.path.createTempDirectory() ?
     val folder = File(getTempFolder(), folderSuffix + System.currentTimeMillis())

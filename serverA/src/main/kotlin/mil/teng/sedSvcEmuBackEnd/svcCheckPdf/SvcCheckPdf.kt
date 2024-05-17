@@ -2,13 +2,14 @@ package mil.teng.sedSvcEmuBackEnd.svcCheckPdf
 
 import io.github.oshai.kotlinlogging.KotlinLogging
 import mil.teng.sedSvcEmuBackEnd.rest.*
+import org.apache.pdfbox.Loader
 import org.apache.pdfbox.preflight.Format
+import org.apache.pdfbox.preflight.PreflightContext
 import org.apache.pdfbox.preflight.PreflightDocument
-import org.apache.pdfbox.preflight.exception.SyntaxValidationException
 import org.apache.pdfbox.preflight.exception.ValidationException
-import org.apache.pdfbox.preflight.parser.PreflightParser
 import org.springframework.stereotype.Service
 import java.io.File
+
 
 /**
  * @author DrTengu, 2024/04
@@ -23,8 +24,7 @@ class SvcCheckPdf(
     val logger = KotlinLogging.logger {}
 
     override fun execute(request: CommonResourceRequest, requestAttachments: List<UniFileTransfer>): CommonResourceResponse {
-        logger.warn { "executed. called for request.class=${request::class.java.canonicalName}" }
-        logger.debug { "got-attachments:$requestAttachments" }
+        logger.debug { "executed. called for request.class=${request::class.java.canonicalName} got-attachments:$requestAttachments" }
         val req = request as CheckPdfRequest
 
         if (requestAttachments.isEmpty()) {
@@ -45,50 +45,32 @@ class SvcCheckPdf(
         logger.debug { "working on ${attach.localName} from ${attach.logicalName}" }
 
         val pdfFile = File(attach.localFolder, attach.localName)
-        val parser = PreflightParser(pdfFile)
-
-        try {
-            parser.parse(Format.PDF_A1B).use {
-                val preflight = it as PreflightDocument
-                if (preflight.isEncrypted) {
-                    return CheckPdfResponse.CheckStampInfo(
-                        attach.logicalName, false,
-                        "file encrypted", null, null, null
-                    )
-                }
-                if (preflight.currentAccessPermission != null && !preflight.currentAccessPermission.canModify()) {
-                    return CheckPdfResponse.CheckStampInfo(
-                        attach.logicalName, false,
-                        "can't modify", null, null, null
-                    )
-                }
-
-                logger.debug { if (req.skipPDFA1check) "pdf-validating:skip" else "pdf-validating:exec" }
-                if (!req.skipPDFA1check) {
-                    val checkResult = execPDFA1validating(preflight, attach)
-                    if (checkResult != null) {
-                        return checkResult
-                    }
-
-
-                }
-                val docInfo = preflight.documentInformation
-                logger.debug { "title=${docInfo.title}" }
-                logger.debug { "keywords=${docInfo.keywords}" }
-                logger.debug { "subj=${docInfo.subject}" }
-                logger.debug { "keys=${docInfo.metadataKeys}" }
-
-
+        Loader.loadPDF(pdfFile).use { doc ->
+            val preflight = PreflightDocument(doc.document, Format.PDF_A1B)
+            preflight.context = PreflightContext()
+            preflight.context.document = preflight
+            if (preflight.isEncrypted) {
+                return CheckPdfResponse.CheckStampInfo(
+                    attach.logicalName, false,
+                    "file encrypted", null, null, null
+                )
             }
-        } catch (ex: SyntaxValidationException) {
-            val message = "page=${ex.pageNumber} ${ex.cause?.message}. (${ex::class.java.canonicalName})"
-            logger.error { "SyntaxValidationException: $message" }
-            return CheckPdfResponse.CheckStampInfo(
-                attach.logicalName, false, "SyntaxValidationException: $message",
-                null, null, null
-            )
+            if (preflight.currentAccessPermission != null && !preflight.currentAccessPermission.canModify()) {
+                return CheckPdfResponse.CheckStampInfo(
+                    attach.logicalName, false,
+                    "can't modify", null, null, null
+                )
+            }
+            logger.debug { if (req.skipPDFA1check) "pdf-validating:skip" else "pdf-validating:exec" }
+            if (!req.skipPDFA1check) {
+                val checkResult = execPDFA1validating(preflight, attach)
+                if (checkResult != null) {
+                    return checkResult
+                }
+            }
+            val docInfo = doc.documentInformation
+            logger.debug { "subj=${docInfo.subject}" }
         }
-
 
         val stampReg = CheckPdfResponse.Info(
             "[МЕСТО ДЛЯ ШТАМПА]", 1, 15, 15, 5, 66
