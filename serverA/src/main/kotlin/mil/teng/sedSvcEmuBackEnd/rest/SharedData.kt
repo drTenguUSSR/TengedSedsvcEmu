@@ -16,23 +16,20 @@ import java.io.File
 object SharedData {
     val logger = KotlinLogging.logger {}
     val objMapper: ObjectMapper
-    val baseTemp=getTempFolder().absolutePath.let {
-        if (it.last().toString() != File.separator) {
-            it + File.separator
-        } else {
-            it
+    val baseTemp: String = baseTempFixup(getTempFolder())
+
+    fun baseTempFixup(base: File): String =
+        base.absolutePath.let {
+            if (it.last().toString() != File.separator) {
+                it + File.separator
+            } else {
+                it
+            }
         }
-    }
 
     inline fun <reified T> parseOne(param: String): T? {
         val res = objMapper.factory.createParser(param.byteInputStream())
             .use { jparser -> objMapper.readValue<T>(jparser) }
-        return res
-    }
-
-    fun <T> parseList(param: String): List<T> {
-        val res = objMapper.factory.createParser(param.byteInputStream())
-            .use { jparser -> objMapper.readValue<List<T>>(jparser) }
         return res
     }
 
@@ -56,12 +53,13 @@ object SharedData {
         return " - try do delete ${dat.absolutePath} = $res"
     }
 
+    fun makeShort(fileOne: File, base: String = baseTemp): String = fileOne.absolutePath.replace(base, "")
+
     fun getKillListInfo(flist: List<File>): String {
         val sb = StringBuilder().append("[")
 
         for (dat in flist) {
-            sb.append(dat.absolutePath.replace(SharedData.baseTemp, ""))
-            sb.append(";")
+            sb.append(makeShort(dat)).append(";")
         }
         return sb.append("]").toString()
     }

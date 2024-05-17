@@ -7,6 +7,8 @@ import org.junit.jupiter.api.Test
 import java.io.File
 import java.util.*
 import kotlin.test.assertEquals
+import kotlin.test.assertFalse
+import kotlin.test.assertTrue
 
 
 /**
@@ -50,9 +52,11 @@ class SvcCheckPdfTest {
         logger.debug { "result-info:$cmdResult" }
 
         logger.debug { "clean-up-after:${SharedData.getKillListInfo(killList)}" }
+        assertTrue { killList.get(0).exists() && killList.get(0).isDirectory }
         for (dat in killList.reversed()) {
             val m1 = SharedData.checkedFileDelete(dat)
             logger.debug { m1 }
         }
+        assertFalse { killList.get(0).exists() }
     }
 }

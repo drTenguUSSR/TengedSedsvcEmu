@@ -2,6 +2,8 @@ package mil.teng.sedSvcEmuBackEnd.svcCheckPdf
 
 import com.fasterxml.jackson.core.JsonParseException
 import com.fasterxml.jackson.databind.exc.MismatchedInputException
+import com.fasterxml.jackson.module.kotlin.readValue
+import io.github.oshai.kotlinlogging.KotlinLogging
 import mil.teng.sedSvcEmuBackEnd.rest.SharedData
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
@@ -13,15 +15,18 @@ import kotlin.test.assertFailsWith
  * @author DrTengu, 2024/05
  */
 
-private data class FakeStampInfo(val marker: String, val pageNum: Int, val topLeft_x: Int, val topLeft_y: Int, val height: Int, val width: Int)
 
 class FakeStampInfoTest {
+    data class FakeStampInfo(val marker: String, val pageNum: Int, val topLeft_x: Int, val topLeft_y: Int, val height: Int, val width: Int)
+
+    private val logger = KotlinLogging.logger {}
+
     @Test
     fun decodeEmptyJson() {
         val param = "{}"
         assertFailsWith<MismatchedInputException> {
             val res = SharedData.parseOne<FakeStampInfo>(param)
-            println(res)
+            logger.error { "must not work: $res" }
         }
     }
 
@@ -34,7 +39,7 @@ class FakeStampInfoTest {
 
         assertFailsWith<JsonParseException> {
             val res = SharedData.parseOne<FakeStampInfo>(param)
-            println(res)
+            logger.error { "must not work: $res" }
         }
     }
 
@@ -47,7 +52,7 @@ class FakeStampInfoTest {
 
         assertFailsWith<MismatchedInputException> {
             val res = SharedData.parseOne<FakeStampInfo>(param)
-            println(res)
+            logger.error { "must not work: $res" }
         }
     }
 
@@ -63,12 +68,15 @@ class FakeStampInfoTest {
             |}""".trimMargin()
 
         val res = SharedData.parseOne<FakeStampInfo>(param)
-        println(res)
+        assertEquals("[МЕСТО ДЛЯ ПОДПИСИ]", res?.marker)
+        assertEquals(1, res?.pageNum)
+        assertEquals(40, res?.topLeft_x)
+        assertEquals(180, res?.topLeft_y)
+        assertEquals(20, res?.height)
+        assertEquals(80, res?.width)
     }
 
-    @Test
-    fun decodeListCorrectA() {
-        val param = """
+    private fun makeListA_asString() = """
             [
                 {
                     "marker": "[МЕСТО ДЛЯ ПОДПИСИ1]",
@@ -104,24 +112,30 @@ class FakeStampInfoTest {
                 }
             ]
         """.trimIndent()
-        println("src=[\n$param\n]")
 
-        val res = SharedData.parseList<FakeStampInfo>(param)
+    @Test
+    fun decodeListCorrectA() {
+        val param = makeListA_asString()
+        logger.debug { "src=[\n$param\n]" }
+
+        val res = SharedData.objMapper.readValue<List<FakeStampInfo>>(param)
         assertEquals(4, res.size)
-        assertEquals("[МЕСТО ДЛЯ ПОДПИСИ1]",res[0].marker)
+
+        assertEquals("[МЕСТО ДЛЯ ПОДПИСИ1]", res[0].marker)
         assertEquals(2, res[1].pageNum)
         assertEquals(3, res[2].pageNum)
-        assertEquals(43,res[2].topLeft_x)
-        assertEquals(180,res[2].topLeft_y)
-        assertEquals(20,res[2].height)
-        assertEquals(80,res[2].width)
+        assertEquals(43, res[2].topLeft_x)
+        assertEquals(180, res[2].topLeft_y)
+        assertEquals(20, res[2].height)
+        assertEquals(80, res[2].width)
 
-        assertEquals("[МЕСТО ДЛЯ ПОДПИСИ4]",res[3].marker)
+        assertEquals("[МЕСТО ДЛЯ ПОДПИСИ4]", res[3].marker)
         assertEquals(4, res[3].pageNum)
-        assertEquals(44,res[3].topLeft_x)
-        assertEquals(184,res[3].topLeft_y)
-        assertEquals(24,res[3].height)
-        assertEquals(84,res[3].width)
-        println(res)
+        assertEquals(44, res[3].topLeft_x)
+        assertEquals(184, res[3].topLeft_y)
+        assertEquals(24, res[3].height)
+        assertEquals(84, res[3].width)
+        logger.debug { res }
     }
+
 }
