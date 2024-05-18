@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.exc.MismatchedInputException
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import io.github.oshai.kotlinlogging.KotlinLogging
+import mil.teng.sedSvcEmuBackEnd.svcCheckPdf.SvcCheckPdf
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
@@ -17,11 +18,9 @@ import kotlin.test.assertTrue
 class JacksonLibraryCheck {
     private val logger = KotlinLogging.logger {}
 
-    data class FakeStampInfo(val marker: String, val pageNum: Int, val topLeft_x: Int, val topLeft_y: Int, val height: Int, val width: Int)
-
     @Test
     fun serializeBasicA() {
-        val obj = FakeStampInfo("[МЕСТО ДЛЯ ПОДПИСИ]", 1, 40, 180, 20, 80)
+        val obj = SvcCheckPdf.FakeStampInfo("[МЕСТО ДЛЯ ПОДПИСИ]", 1, 40, 180, 20, 80)
         val res = jacksonObjectMapper().writeValueAsString(obj)
         val expected = """
             {"marker":"[МЕСТО ДЛЯ ПОДПИСИ]","pageNum":1,"topLeft_x":40,"topLeft_y":180,"height":20,"width":80}
@@ -31,11 +30,11 @@ class JacksonLibraryCheck {
 
     @Test
     fun serializeListA() {
-        val objA = FakeStampInfo("[МЕСТО ДЛЯ ПОДПИСИ1]", 1, 41, 180, 20, 80)
-        val objB = FakeStampInfo("[МЕСТО ДЛЯ ПОДПИСИ2]", 2, 42, 180, 20, 80)
-        val objC = FakeStampInfo("[МЕСТО ДЛЯ ПОДПИСИ3]", 3, 43, 180, 20, 80)
-        val objD = FakeStampInfo("[МЕСТО ДЛЯ ПОДПИСИ4]", 4, 44, 180, 20, 80)
-        val lstObj = listOf<FakeStampInfo>(objA, objB, objC, objD)
+        val objA = SvcCheckPdf.FakeStampInfo("[МЕСТО ДЛЯ ПОДПИСИ1]", 1, 41, 180, 20, 80)
+        val objB = SvcCheckPdf.FakeStampInfo("[МЕСТО ДЛЯ ПОДПИСИ2]", 2, 42, 180, 20, 80)
+        val objC = SvcCheckPdf.FakeStampInfo("[МЕСТО ДЛЯ ПОДПИСИ3]", 3, 43, 180, 20, 80)
+        val objD = SvcCheckPdf.FakeStampInfo("[МЕСТО ДЛЯ ПОДПИСИ4]", 4, 44, 180, 20, 80)
+        val lstObj = listOf<SvcCheckPdf.FakeStampInfo>(objA, objB, objC, objD)
         val res = jacksonObjectMapper().writeValueAsString(lstObj)
         println("serializeListA=$res")
         assertTrue { "[МЕСТО ДЛЯ ПОДПИСИ1]" in res }

@@ -17,7 +17,6 @@ import kotlin.test.assertFailsWith
 
 
 class FakeStampInfoTest {
-    data class FakeStampInfo(val marker: String, val pageNum: Int, val topLeft_x: Int, val topLeft_y: Int, val height: Int, val width: Int)
 
     private val logger = KotlinLogging.logger {}
 
@@ -25,7 +24,7 @@ class FakeStampInfoTest {
     fun decodeEmptyJson() {
         val param = "{}"
         assertFailsWith<MismatchedInputException> {
-            val res = SharedData.parseOne<FakeStampInfo>(param)
+            val res = SharedData.parseOne<SvcCheckPdf.FakeStampInfo>(param)
             logger.error { "must not work: $res" }
         }
     }
@@ -38,7 +37,7 @@ class FakeStampInfoTest {
         """.trimIndent()
 
         assertFailsWith<JsonParseException> {
-            val res = SharedData.parseOne<FakeStampInfo>(param)
+            val res = SharedData.parseOne<SvcCheckPdf.FakeStampInfo>(param)
             logger.error { "must not work: $res" }
         }
     }
@@ -51,7 +50,7 @@ class FakeStampInfoTest {
         """.trimIndent()
 
         assertFailsWith<MismatchedInputException> {
-            val res = SharedData.parseOne<FakeStampInfo>(param)
+            val res = SharedData.parseOne<SvcCheckPdf.FakeStampInfo>(param)
             logger.error { "must not work: $res" }
         }
     }
@@ -67,7 +66,7 @@ class FakeStampInfoTest {
             |"width":80
             |}""".trimMargin()
 
-        val res = SharedData.parseOne<FakeStampInfo>(param)
+        val res = SharedData.parseOne<SvcCheckPdf.FakeStampInfo>(param)
         assertEquals("[МЕСТО ДЛЯ ПОДПИСИ]", res?.marker)
         assertEquals(1, res?.pageNum)
         assertEquals(40, res?.topLeft_x)
@@ -118,7 +117,7 @@ class FakeStampInfoTest {
         val param = makeListA_asString()
         logger.debug { "src=[\n$param\n]" }
 
-        val res = SharedData.objMapper.readValue<List<FakeStampInfo>>(param)
+        val res = SharedData.objMapper.readValue<List<SvcCheckPdf.FakeStampInfo>>(param)
         assertEquals(4, res.size)
 
         assertEquals("[МЕСТО ДЛЯ ПОДПИСИ1]", res[0].marker)

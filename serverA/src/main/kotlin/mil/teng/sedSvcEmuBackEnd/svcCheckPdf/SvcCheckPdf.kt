@@ -1,5 +1,7 @@
 package mil.teng.sedSvcEmuBackEnd.svcCheckPdf
 
+import com.fasterxml.jackson.core.JsonParseException
+import com.fasterxml.jackson.module.kotlin.readValue
 import io.github.oshai.kotlinlogging.KotlinLogging
 import mil.teng.sedSvcEmuBackEnd.rest.*
 import org.apache.pdfbox.Loader
@@ -20,6 +22,11 @@ class SvcCheckPdf(
     override val commandName: String = "svcCheckPdf",
     override val commandRelationSuffix: String = "#checkPdf"
 ) : AbstractCommandProcessor {
+    data class FakeStampInfo(val marker: String, val pageNum: Int, val topLeft_x: Int, val topLeft_y: Int, val height: Int, val width: Int)
+    companion object {
+        const val LABEL_REG = "[МЕСТО ДЛЯ ШТАМПА]"
+        const val LABEL_SIG = "[МЕСТО ДЛЯ ПОДПИСИ]"
+    }
 
     val logger = KotlinLogging.logger {}
 
@@ -61,26 +68,69 @@ class SvcCheckPdf(
                     "can't modify", null, null, null
                 )
             }
-            logger.debug { if (req.skipPDFA1check) "pdf-validating:skip" else "pdf-validating:exec" }
+            logger.debug { if (req.skipPDFA1check) "pdf/a-validating:skip" else "pdf/a-validating:exec" }
             if (!req.skipPDFA1check) {
                 val checkResult = execPDFA1validating(preflight, attach)
                 if (checkResult != null) {
                     return checkResult
                 }
             }
-            val docInfo = doc.documentInformation
-            logger.debug { "subj=${docInfo.subject}" }
+            val docSubj = doc.documentInformation.subject
+            logger.debug { "subj=$docSubj" }
+            return decodeToStamps(attach.logicalName, docSubj, req)
         }
 
-        val stampReg = CheckPdfResponse.Info(
-            "[МЕСТО ДЛЯ ШТАМПА]", 1, 15, 15, 5, 66
-        )
-        val signA = CheckPdfResponse.Info("[МЕСТО ДЛЯ ПОДПИСИ]", 1, 40, 150, 20, 80)
-        val signB = CheckPdfResponse.Info("[МЕСТО ДЛЯ ПОДПИСИ]", 1, 40, 180, 20, 80)
-        val fileInfo = CheckPdfResponse.CheckStampInfo(
-            attach.logicalName, true, null, stampReg, listOf(signA, signB), null
-        )
+//        val stampReg = CheckPdfResponse.Info(
+//            "[МЕСТО ДЛЯ ШТАМПА]", 1, 15, 15, 5, 66
+//        )
+//        val signA = CheckPdfResponse.Info("[МЕСТО ДЛЯ ПОДПИСИ]", 1, 40, 150, 20, 80)
+//        val signB = CheckPdfResponse.Info("[МЕСТО ДЛЯ ПОДПИСИ]", 1, 40, 180, 20, 80)
+//        val fileInfo = CheckPdfResponse.CheckStampInfo(
+//            attach.logicalName, true, null, stampReg, listOf(signA, signB), null
+//        )
+//        return fileInfo
+    }
 
+    private fun decodeToStamps(logicalName: String, docSubj: String?, req: CheckPdfRequest): CheckPdfResponse.CheckStampInfo {
+        if (docSubj.isNullOrEmpty()) {
+            val fileInfo = CheckPdfResponse.CheckStampInfo(logicalName, !req.skipPDFA1check, null, null, emptyList(), null)
+            return fileInfo
+        }
+
+        var stamps: List<FakeStampInfo>
+        try {
+            stamps = SharedData.objMapper.readValue<List<FakeStampInfo>>(docSubj)
+        } catch (ex: JsonParseException) {
+            logger.debug { "decode error: ${ex.cause} ${ex.message}" }
+            val fileInfo = CheckPdfResponse.CheckStampInfo(logicalName, false, ex.message, null, emptyList(), null)
+            return fileInfo
+        }
+
+        val lookupLabels = hashSetOf(LABEL_SIG, LABEL_REG, *req.markers.toTypedArray())
+        logger.debug { "lookupLabels:$lookupLabels" }
+
+        var labelReg: CheckPdfResponse.Info? = null
+        val labelsSig = mutableListOf<CheckPdfResponse.Info>()
+        val labelsOther = mutableListOf<CheckPdfResponse.Info>()
+        stamps.stream().filter { lookupLabels.contains(it.marker) }.forEach { fake ->
+            val stampInfo = CheckPdfResponse.Info(fake.marker, fake.pageNum, fake.topLeft_x, fake.topLeft_y, fake.height, fake.width)
+            when (fake.marker) {
+                LABEL_REG -> labelReg = stampInfo
+                LABEL_SIG -> labelsSig.add(stampInfo)
+                else -> labelsOther.add(stampInfo)
+            }
+        }
+//        for (fake in stamps) {
+//            if (lookupLabels.contains(fake.marker)) {
+//                val stampInfo = CheckPdfResponse.Info(fake.marker, fake.pageNum, fake.topLeft_x, fake.topLeft_y, fake.height, fake.width)
+//                when (fake.marker) {
+//                    LABEL_REG -> label_reg = stampInfo
+//                    LABEL_SIG -> labels_sig.add(stampInfo)
+//                    else -> labels_other.add(stampInfo)
+//                }
+//            }
+//        }
+        val fileInfo = CheckPdfResponse.CheckStampInfo(logicalName, !req.skipPDFA1check, null, labelReg, labelsSig, labelsOther)
         return fileInfo
     }
 
@@ -95,7 +145,8 @@ class SvcCheckPdf(
                 validateResult.errorsList?.let { errLst ->
                     logger.error { "found errors for file ${attach.localName} from ${attach.logicalName}. count=${errLst.size} " }
                     errLst.forEach { errOne ->
-                        logger.error { "- ${errOne.pageNumber}: ${errOne.details}" }
+                        logger.error { "- page:${errOne.pageNumber}. code:${errOne.errorCode}. " +
+                                "detail: ${errOne.details}. cause: ${errOne.cause}" }
                     }
                 }
                 return CheckPdfResponse.CheckStampInfo(

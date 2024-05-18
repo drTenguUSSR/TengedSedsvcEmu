@@ -1,0 +1,51 @@
+[{
+        "marker": "[МЕСТО ДЛЯ ШТАМПА]",
+        "pageNum": 1,
+        "topLeft_x": 41,
+        "topLeft_y": 181,
+        "height": 21,
+        "width": 81
+    }, {
+        "marker": "[МЕСТО ДЛЯ ПОДПИСИ]",
+        "pageNum": 2,
+        "topLeft_x": 42,
+        "topLeft_y": 182,
+        "height": 22,
+        "width": 82
+    }, {
+        "marker": "[МЕСТО ДЛЯ ПОДПИСИ]",
+        "pageNum": 3,
+        "topLeft_x": 43,
+        "topLeft_y": 183,
+        "height": 23,
+        "width": 83
+    }, {
+        "marker": "[МЕРКУРИЙ]",
+        "pageNum": 4,
+        "topLeft_x": 44,
+        "topLeft_y": 184,
+        "height": 24,
+        "width": 84
+    }, {
+        "marker": "[ВЕНЕРА]",
+        "pageNum": 5,
+        "topLeft_x": 45,
+        "topLeft_y": 185,
+        "height": 25,
+        "width": 85
+    }, {
+        "marker": "[ЗЕМЛЯ]",
+        "pageNum": 6,
+        "topLeft_x": 46,
+        "topLeft_y": 186,
+        "height": 26,
+        "width": 86
+    }, {
+        "marker": "[МАРС]",
+        "pageNum": 7,
+        "topLeft_x": 47,
+        "topLeft_y": 187,
+        "height": 27,
+        "width": 87
+    }
+]
