@@ -40,16 +40,20 @@ class SvcCheckPdf(
 
         val allStamps = mutableListOf<CheckPdfResponse.CheckStampInfo>()
 
-        for (attach in requestAttachments) {
-            val stamps = processFile(attach, req)
+        requestAttachments.stream().filter { it.logicalName.lowercase().endsWith(".pdf") }.forEach { att ->
+            val stamps = processFile(att, req, requestAttachments)
             allStamps.add(stamps)
         }
 
         return CheckPdfResponse(allStamps)
     }
 
-    private fun processFile(attach: UniFileTransfer, req: CheckPdfRequest): CheckPdfResponse.CheckStampInfo {
-        logger.debug { "working on ${attach.localName} from ${attach.logicalName}" }
+    private fun processFile(
+        attach: UniFileTransfer,
+        req: CheckPdfRequest,
+        requestAttachments: List<UniFileTransfer>
+    ): CheckPdfResponse.CheckStampInfo {
+        logger.debug { "working on ${attach.localName}: $attach" }
 
         val pdfFile = File(attach.localFolder, attach.localName)
         Loader.loadPDF(pdfFile).use { doc ->
@@ -59,13 +63,13 @@ class SvcCheckPdf(
             if (preflight.isEncrypted) {
                 return CheckPdfResponse.CheckStampInfo(
                     attach.logicalName, false,
-                    "file encrypted", null, null, null
+                    "file encrypted", null, emptyList(), emptyList()
                 )
             }
             if (preflight.currentAccessPermission != null && !preflight.currentAccessPermission.canModify()) {
                 return CheckPdfResponse.CheckStampInfo(
                     attach.logicalName, false,
-                    "can't modify", null, null, null
+                    "can't modify", null, emptyList(), emptyList()
                 )
             }
             logger.debug { if (req.skipPDFA1check) "pdf/a-validating:skip" else "pdf/a-validating:exec" }
@@ -75,9 +79,8 @@ class SvcCheckPdf(
                     return checkResult
                 }
             }
-            val docSubj = doc.documentInformation.subject
-            logger.debug { "subj=$docSubj" }
-            return decodeToStamps(attach.logicalName, docSubj, req)
+            logger.debug { "title=${doc.documentInformation.title}" }
+            return decodeToStamps(attach.logicalName, req, requestAttachments)
         }
 
 //        val stampReg = CheckPdfResponse.Info(
@@ -91,18 +94,35 @@ class SvcCheckPdf(
 //        return fileInfo
     }
 
-    private fun decodeToStamps(logicalName: String, docSubj: String?, req: CheckPdfRequest): CheckPdfResponse.CheckStampInfo {
-        if (docSubj.isNullOrEmpty()) {
-            val fileInfo = CheckPdfResponse.CheckStampInfo(logicalName, !req.skipPDFA1check, null, null, emptyList(), null)
+    private fun decodeToStamps(
+        logicalName: String,
+        req: CheckPdfRequest,
+        requestAttachments: List<UniFileTransfer>
+    ): CheckPdfResponse.CheckStampInfo {
+        if (!req.useFakeLoad) {
+            throw IllegalStateException("mode useFakeLoad=false not supported")
+        }
+        val fakeSrcName = logicalName.substringBeforeLast(".") + ".json"
+        val fakeSrcFile =
+            requestAttachments.stream().filter { it.logicalName.equals(fakeSrcName, true) }
+                .map { File(it.localFolder + File.separator + it.localName) }
+                .findAny().orElseThrow()
+
+        val strStamps = fakeSrcFile.readText(Charsets.UTF_8)
+
+        if (strStamps.isNullOrEmpty()) {
+            val fileInfo =
+                CheckPdfResponse.CheckStampInfo(logicalName, !req.skipPDFA1check, "fake source is empty", null, emptyList(), emptyList())
             return fileInfo
         }
+        logger.debug { "fake source ${fakeSrcFile.absolutePath} is loaded" }
 
         var stamps: List<FakeStampInfo>
         try {
-            stamps = SharedData.objMapper.readValue<List<FakeStampInfo>>(docSubj)
+            stamps = SharedData.objMapper.readValue<List<FakeStampInfo>>(strStamps)
         } catch (ex: JsonParseException) {
             logger.debug { "decode error: ${ex.cause} ${ex.message}" }
-            val fileInfo = CheckPdfResponse.CheckStampInfo(logicalName, false, ex.message, null, emptyList(), null)
+            val fileInfo = CheckPdfResponse.CheckStampInfo(logicalName, false, ex.message, null, emptyList(), emptyList())
             return fileInfo
         }
 
@@ -112,24 +132,19 @@ class SvcCheckPdf(
         var labelReg: CheckPdfResponse.Info? = null
         val labelsSig = mutableListOf<CheckPdfResponse.Info>()
         val labelsOther = mutableListOf<CheckPdfResponse.Info>()
+        logger.debug { "labels-lookup-beg [" }
         stamps.stream().filter { lookupLabels.contains(it.marker) }.forEach { fake ->
             val stampInfo = CheckPdfResponse.Info(fake.marker, fake.pageNum, fake.topLeft_x, fake.topLeft_y, fake.height, fake.width)
             when (fake.marker) {
                 LABEL_REG -> labelReg = stampInfo
-                LABEL_SIG -> labelsSig.add(stampInfo)
+                LABEL_SIG -> {
+                    labelsSig.add(stampInfo)
+                    logger.debug { "- labelSig: $stampInfo" }
+                }
                 else -> labelsOther.add(stampInfo)
             }
         }
-//        for (fake in stamps) {
-//            if (lookupLabels.contains(fake.marker)) {
-//                val stampInfo = CheckPdfResponse.Info(fake.marker, fake.pageNum, fake.topLeft_x, fake.topLeft_y, fake.height, fake.width)
-//                when (fake.marker) {
-//                    LABEL_REG -> label_reg = stampInfo
-//                    LABEL_SIG -> labels_sig.add(stampInfo)
-//                    else -> labels_other.add(stampInfo)
-//                }
-//            }
-//        }
+        logger.debug { "]" }
         val fileInfo = CheckPdfResponse.CheckStampInfo(logicalName, !req.skipPDFA1check, null, labelReg, labelsSig, labelsOther)
         return fileInfo
     }
@@ -145,19 +160,21 @@ class SvcCheckPdf(
                 validateResult.errorsList?.let { errLst ->
                     logger.error { "found errors for file ${attach.localName} from ${attach.logicalName}. count=${errLst.size} " }
                     errLst.forEach { errOne ->
-                        logger.error { "- page:${errOne.pageNumber}. code:${errOne.errorCode}. " +
-                                "detail: ${errOne.details}. cause: ${errOne.cause}" }
+                        logger.error {
+                            "- page:${errOne.pageNumber}. code:${errOne.errorCode}. " +
+                                    "detail: ${errOne.details}. cause: ${errOne.cause}"
+                        }
                     }
                 }
                 return CheckPdfResponse.CheckStampInfo(
                     attach.logicalName, false, "validation error - PDF/A error. see server log",
-                    null, null, null
+                    null, emptyList(), emptyList()
                 )
             }
         } catch (ex: ValidationException) {
             return CheckPdfResponse.CheckStampInfo(
                 attach.logicalName, false, "validation error exception: ${ex.message}",
-                null, null, null
+                null, emptyList(), emptyList()
             )
         }
         return null

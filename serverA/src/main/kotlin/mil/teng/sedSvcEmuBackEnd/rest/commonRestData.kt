@@ -31,7 +31,12 @@ class Word2PdfResponse(
 
 // svcCheckPdf request-response
 @ContentType("application/vnd.intertrust.cm.sedsvc+json;type=svcCheckPdf-request")
-data class CheckPdfRequest(val markers: List<String>, val skipPDFA1check: Boolean, override val doZip: Boolean = false) : CommonResourceRequest
+data class CheckPdfRequest(
+    val markers: List<String>,
+    val skipPDFA1check: Boolean,
+    val useFakeLoad: Boolean,
+    override val doZip: Boolean = false
+) : CommonResourceRequest
 
 @ContentType("application/vnd.intertrust.cm.sedsvc+json;type=svcCheckPdf-response")
 data class CheckPdfResponse(
@@ -42,12 +47,16 @@ data class CheckPdfResponse(
         val valid: Boolean,
         val errorMessage: String?,
         val regStamp: Info?,
-        val signStamps: List<Info>?,
-        val stampInfos: List<Info>?
+        val signStamps: List<Info>,
+        val stampInfos: List<Info>
     )
 
     class Info(val markerText: String, pageNum: Int, topLeft_x: Int, topLeft_y: Int, height: Int, width: Int) :
-        StampInfo(pageNum, topLeft_x, topLeft_y, height, width)
+        StampInfo(pageNum, topLeft_x, topLeft_y, height, width) {
+        override fun toString(): String {
+            return "Info(markerText='$markerText',"+super.toString()+")"
+        }
+    }
 }
 
 // svcRegSignStamp request-response
@@ -91,7 +100,11 @@ class RegSignStampResponse(
  */
 data class CommandsBeanInfo(val mapBeans: Map<String, AbstractCommandProcessor>, val mapRelations: Map<String, String>)
 
-open class StampInfo(val pageNum: Int, val topLeft_x: Int, val topLeft_y: Int, val height: Int, val width: Int)
+open class StampInfo(val pageNum: Int, val topLeft_x: Int, val topLeft_y: Int, val height: Int, val width: Int) {
+    override fun toString(): String {
+        return "StampInfo(pageNum=$pageNum, topLeft_x=$topLeft_x, topLeft_y=$topLeft_y, height=$height, width=$width)"
+    }
+}
 
 /**
  * @param logicalName - логическое имея. Могут присутствовать некорректные символы
