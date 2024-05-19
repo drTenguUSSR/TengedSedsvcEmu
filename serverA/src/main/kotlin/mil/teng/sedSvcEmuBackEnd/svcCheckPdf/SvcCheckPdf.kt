@@ -11,6 +11,7 @@ import org.apache.pdfbox.preflight.PreflightDocument
 import org.apache.pdfbox.preflight.exception.ValidationException
 import org.springframework.stereotype.Service
 import java.io.File
+import kotlin.jvm.optionals.getOrNull
 
 
 /**
@@ -106,7 +107,13 @@ class SvcCheckPdf(
         val fakeSrcFile =
             requestAttachments.stream().filter { it.logicalName.equals(fakeSrcName, true) }
                 .map { File(it.localFolder + File.separator + it.localName) }
-                .findAny().orElseThrow()
+                .findAny().getOrNull()
+
+        if (fakeSrcFile == null) {
+            val fileInfo =
+                CheckPdfResponse.CheckStampInfo(logicalName, !req.skipPDFA1check, null, null, emptyList(), emptyList())
+            return fileInfo
+        }
 
         val strStamps = fakeSrcFile.readText(Charsets.UTF_8)
 
@@ -141,6 +148,7 @@ class SvcCheckPdf(
                     labelsSig.add(stampInfo)
                     logger.debug { "- labelSig: $stampInfo" }
                 }
+
                 else -> labelsOther.add(stampInfo)
             }
         }

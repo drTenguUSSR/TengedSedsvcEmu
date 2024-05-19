@@ -6,10 +6,7 @@ import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import java.io.File
 import java.util.*
-import kotlin.test.assertEquals
-import kotlin.test.assertFalse
-import kotlin.test.assertNotNull
-import kotlin.test.assertTrue
+import kotlin.test.*
 
 
 /**
@@ -21,49 +18,62 @@ class SvcCheckPdfTest {
     private val logger = KotlinLogging.logger {}
     private val clazz = this::class.java
 
-    /*
-        @Test
-        @DisplayName("04.pdf/basic file with no label. error on field decode")
-        fun simpleNoLabel() {
-            val killList = mutableListOf<File>()
-            val srcDirName = "src-" + UUID.randomUUID().toString()
-            val resList =
-                mapOf("/svcCheckPdf/04.z-text1-z.pdf" to "md5:687B96D2E1E9C39B53ECBB39CE9FCB01,sha1:22E1EC5C8DEFCA3C8955F6F5AB4E545FFF13D528")
+    companion object {
+        const val PDF_MAIN_1_SUM = "md5:733AAEA4B394C996A139B6974D62365B,sha1:A0789F101D1BC41B69597B86E412BF8FB17012D9"
+        const val PDF_MAIN_2_SUM = "md5:687B96D2E1E9C39B53ECBB39CE9FCB01,sha1:22E1EC5C8DEFCA3C8955F6F5AB4E545FFF13D528"
+    }
 
+    @Test
+    @DisplayName("04.pdf/basic file with no label. error on pdf/a validation")
+    fun simplePDFNoLabel() {
+        val killList = mutableListOf<File>()
+        val srcDirName = "src-" + UUID.randomUUID().toString()
+        val resList = listOf<UniFileInfo>(
+            UniFileInfo("просто-0157.pdf", "/svcCheckPdf/main2-simple.pdf", PDF_MAIN_2_SUM)
+        )
 
-            val uniInfo = prepareResourceTestFiles(srcDirName, resList, killList)
+        val uniInfo = prepareResourceTestFiles(srcDirName, resList, killList)
 
-            val requestAttachments = mutableListOf<UniFileTransfer>()
-            uniInfo.forEach { (_, uni) -> requestAttachments.add(uni) }
+        val requestAttachments = mutableListOf<UniFileTransfer>()
+        uniInfo.forEach { (_, uni) -> requestAttachments.add(uni) }
+        val requestDats = CheckPdfRequest(listOf("[ПРИМЕР ДОПОЛНИТЕЛЬНОГО ШТАМПА]"), skipPDFA1check = false, useFakeLoad = true)
+        val cmdResult = SvcCheckPdf().execute(requestDats, requestAttachments) as CheckPdfResponse
 
-            val requestDats = CheckPdfRequest(listOf("[ПРИМЕР ДОПОЛНИТЕЛЬНОГО ШТАМПА]"), true)
+        val resOne = cmdResult.checkStampInfos[0]
+        assertEquals("просто-0157.pdf", resOne.fileName)
+        assertFalse(resOne.valid)
+        logger.debug { "errorMessage:${resOne.errorMessage}" }
+        assertContains(resOne.errorMessage ?: "", "validation error - PDF/A error")
 
-            val cmdResult = SvcCheckPdf().execute(requestDats, requestAttachments) as CheckPdfResponse
+        cleanupKillList(killList)
+    }
 
-            val resOne = cmdResult.checkStampInfos[0]
-            assertEquals("fake-04.z-text1-z.pdf", resOne.fileName)
-            assertFalse(resOne.valid)
-            assertContains(resOne.errorMessage ?: "", "'subj'")
-            assertContains(resOne.errorMessage ?: "", "JSON String, Number, Array")
+    @Test
+    @DisplayName("05.pdf/a file with no label. empty result")
+    fun pdfANoLabel() {
+        val killList = mutableListOf<File>()
+        val srcDirName = "src-" + UUID.randomUUID().toString()
+        val resList = listOf<UniFileInfo>(
+            UniFileInfo("валидный-0214.pdf", "/svcCheckPdf/main1-pdfA.pdf", PDF_MAIN_1_SUM)
+        )
 
-            logger.debug { "clean-up-after:${SharedData.getKillListInfo(killList)}" }
-            assertTrue { killList[0].exists() && killList[0].isDirectory }
-            for (dat in killList.reversed()) {
-                val m1 = SharedData.checkedFileDelete(dat)
-                logger.debug { m1 }
-            }
-            assertFalse { killList[0].exists() }
-        }
-    */
-    /**
-     * Данные для подготовки файлов к "загрузке" (переформатирование в List<UniFileTransfer>)
-     * параметры [origin], [resourceName], [sum]
-     *     @param origin - логическое имя файла
-     *     @param resourceName - физическое имя ресурса от "src\test\resources",
-     *          например "/svcCheckPdf/10.a-rss-mver.pdf"
-     *     @param sum - контрольные суммы. например "md5:73...5B,sha1:A07...D9"
-     */
-    data class UniFileInfo(val origin: String, val resourceName: String, val sum: String)
+        val uniInfo = prepareResourceTestFiles(srcDirName, resList, killList)
+
+        val requestAttachments = mutableListOf<UniFileTransfer>()
+        uniInfo.forEach { (_, uni) -> requestAttachments.add(uni) }
+        val requestDats = CheckPdfRequest(listOf("[ПРИМЕР ДОПОЛНИТЕЛЬНОГО ШТАМПА]"), skipPDFA1check = false, useFakeLoad = true)
+        val cmdResult = SvcCheckPdf().execute(requestDats, requestAttachments) as CheckPdfResponse
+
+        val resOne = cmdResult.checkStampInfos[0]
+        assertEquals("валидный-0214.pdf", resOne.fileName)
+        assertTrue(resOne.valid)
+        assertNull(resOne.errorMessage)
+        assertNull(resOne.regStamp)
+        assertTrue { resOne.signStamps.isEmpty() }
+        assertTrue { resOne.stampInfos.isEmpty() }
+
+        cleanupKillList(killList)
+    }
 
     @Test
     @DisplayName("10.pdf/a file with full set of labels")
@@ -73,12 +83,12 @@ class SvcCheckPdfTest {
         val resList = listOf<UniFileInfo>(
             UniFileInfo(
                 "некий-файл.pdf",
-                "/svcCheckPdf/10.a-rss-mver.pdf",
-                "md5:733AAEA4B394C996A139B6974D62365B,sha1:A0789F101D1BC41B69597B86E412BF8FB17012D9"
+                "/svcCheckPdf/main1-pdfA.pdf",
+                PDF_MAIN_1_SUM
             ),
             UniFileInfo(
                 "некий-файл.json",
-                "/svcCheckPdf/10.a-rss-mver.json",
+                "/svcCheckPdf/10.rss-mver.json",
                 "md5:BF2584A8744122B6CA6F9EC9F1044A76,sha1:FF16F37347BBD326E058D3BE74B7B42D8330E92A"
             )
         )
@@ -87,9 +97,7 @@ class SvcCheckPdfTest {
 
         val requestAttachments = mutableListOf<UniFileTransfer>()
         uniInfo.forEach { (_, uni) -> requestAttachments.add(uni) }
-
         val requestDats = CheckPdfRequest(listOf("[ПРИМЕР ДОПОЛНИТЕЛЬНОГО ШТАМПА]"), skipPDFA1check = false, useFakeLoad = true)
-
         val cmdResult = SvcCheckPdf().execute(requestDats, requestAttachments) as CheckPdfResponse
 
         val resOne = cmdResult.checkStampInfos[0]
@@ -125,10 +133,14 @@ class SvcCheckPdfTest {
             assertEquals(23, it.height)
             assertEquals(83, it.width)
         }
-        
+
         assertNotNull(resOne.stampInfos)
         assertTrue { resOne.stampInfos.isEmpty() }
 
+        cleanupKillList(killList)
+    }
+
+    private fun cleanupKillList(killList: MutableList<File>) {
         logger.debug { "clean-up-after:${SharedData.getKillListInfo(killList)}" }
         assertTrue { killList[0].exists() && killList[0].isDirectory }
         for (dat in killList.reversed()) {
@@ -176,4 +188,14 @@ class SvcCheckPdfTest {
 
         return resultInfo
     }
+
+    /**
+     * Данные для подготовки файлов к "загрузке" (переформатирование в List<UniFileTransfer>)
+     * параметры [origin], [resourceName], [sum]
+     *     @param origin - логическое имя файла
+     *     @param resourceName - физическое имя ресурса от "src\test\resources",
+     *          например "/svcCheckPdf/10.a-rss-mver.pdf"
+     *     @param sum - контрольные суммы. например "md5:73...5B,sha1:A07...D9"
+     */
+    data class UniFileInfo(val origin: String, val resourceName: String, val sum: String)
 }
