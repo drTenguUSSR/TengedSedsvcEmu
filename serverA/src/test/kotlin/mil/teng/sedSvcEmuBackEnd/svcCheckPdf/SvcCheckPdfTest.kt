@@ -15,13 +15,6 @@ import kotlin.test.*
  */
 
 class SvcCheckPdfTest {
-    private val logger = KotlinLogging.logger {}
-    private val clazz = this::class.java
-
-    companion object {
-        const val PDF_MAIN_1_SUM = "md5:733AAEA4B394C996A139B6974D62365B,sha1:A0789F101D1BC41B69597B86E412BF8FB17012D9"
-        const val PDF_MAIN_2_SUM = "md5:687B96D2E1E9C39B53ECBB39CE9FCB01,sha1:22E1EC5C8DEFCA3C8955F6F5AB4E545FFF13D528"
-    }
 
     @Test
     @DisplayName("04.pdf/basic file with no label. error on pdf/a validation")
@@ -140,16 +133,6 @@ class SvcCheckPdfTest {
         cleanupKillList(killList)
     }
 
-    private fun cleanupKillList(killList: MutableList<File>) {
-        logger.debug { "clean-up-after:${SharedData.getKillListInfo(killList)}" }
-        assertTrue { killList[0].exists() && killList[0].isDirectory }
-        for (dat in killList.reversed()) {
-            val m1 = SharedData.checkedFileDelete(dat)
-            logger.debug { m1 }
-        }
-        assertFalse { killList[0].exists() }
-    }
-
 //        assertContains(resOne.errorMessage?:"","'subj'", message = resOne.errorMessage)
 //        assertContains(resOne.errorMessage?:"","JSON String, Number, Array", message=resOne.errorMessage)
     /**
@@ -198,4 +181,23 @@ class SvcCheckPdfTest {
      *     @param sum - контрольные суммы. например "md5:73...5B,sha1:A07...D9"
      */
     data class UniFileInfo(val origin: String, val resourceName: String, val sum: String)
+
+    companion object {
+        private val logger = KotlinLogging.logger {}
+        private val clazz = this::class.java
+
+        const val PDF_MAIN_1_SUM = "md5:733AAEA4B394C996A139B6974D62365B,sha1:A0789F101D1BC41B69597B86E412BF8FB17012D9"
+        const val PDF_MAIN_2_SUM = "md5:687B96D2E1E9C39B53ECBB39CE9FCB01,sha1:22E1EC5C8DEFCA3C8955F6F5AB4E545FFF13D528"
+
+        private fun cleanupKillList(killList: MutableList<File>) {
+            logger.debug { "clean-up-after:${SharedData.getKillListInfo(killList)}" }
+            assertTrue { killList[0].exists() && killList[0].isDirectory }
+            for (dat in killList.reversed()) {
+                val m1 = SharedData.checkedFileDelete(dat)
+                logger.debug { m1 }
+            }
+            assertFalse { killList[0].exists() }
+        }
+
+    }
 }
