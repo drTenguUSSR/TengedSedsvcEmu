@@ -14,12 +14,11 @@ import java.io.FileInputStream
 import java.security.MessageDigest
 import java.time.Instant
 import java.util.*
-import kotlin.text.HexFormat
 
 @RestController
 @RequestMapping("/api")
 class RootController(
-    private val mainDataConvertor: MainDataConvertor,
+    @Resource private val mainDataConvertor: MainDataConvertor,
     @Resource private val commandsBeanInfo: CommandsBeanInfo
 ) : CommonController() {
 
@@ -41,7 +40,8 @@ class RootController(
         commandsBeanInfo.mapRelations.forEach { (cmdKey, cmdVal) ->
             logger.debug { "- iterate: key=!$cmdKey! val=!$cmdVal!" }
             val relSuffix = commandsBeanInfo.mapBeans[cmdKey]?.commandRelationSuffix
-                ?: throw IllegalStateException("mapBeans for key=$cmdKey not found")
+                ?: throw IllegalStateException("mapBeans for key=$cmdKey not found.allBean:${allBeanInfo(commandsBeanInfo.mapBeans)}")
+
             val relFull = CommonResource.BASIC_NAME_RELATION_BASE + relSuffix
             val href = "$baseUrl/execRequest?command=$cmdKey"
             val title = "title for $cmdKey $cmdVal"
@@ -116,6 +116,7 @@ class RootController(
         logger.debug { "execRequest-end" }
     }
 
+
     @OptIn(ExperimentalStdlibApi::class)
     private fun calcFileCheck(localFile: File, buffer: ByteArray, sumMd5: MessageDigest, sumExt: MessageDigest): String {
         sumMd5.reset()
@@ -127,14 +128,22 @@ class RootController(
                 sumExt.update(buffer, 0, count)
                 count = fis.read(buffer, 0, FILE_BUFFER_LEN)
             }
-            val resMd5 = sumMd5.digest().toHexString(HexFormat.UpperCase)
-            val resExt = sumExt.digest().toHexString(HexFormat.UpperCase)
+            val resMd5 = sumMd5.digest().toHexString(kotlin.text.HexFormat.UpperCase)
+            val resExt = sumExt.digest().toHexString(kotlin.text.HexFormat.UpperCase)
             return "md5:$resMd5,sha1:$resExt"
         }
     }
 
     companion object {
         private const val FILE_BUFFER_LEN = 4096
+
+        public fun allBeanInfo(mapBeans: Map<String, AbstractCommandProcessor>): String {
+            val sb = StringBuilder()
+            sb.append("!")
+            mapBeans.forEach { dat -> sb.append(dat.key) }
+            sb.append("!")
+            return sb.toString()
+        }
     }
 
 }

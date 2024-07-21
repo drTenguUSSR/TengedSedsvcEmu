@@ -1,4 +1,4 @@
-package mil.teng.sedSvcEmuBackEnd.direct
+package mil.teng.sedSvcEmuBackEnd.temp
 
 import io.github.oshai.kotlinlogging.KotlinLogging
 import mil.teng.sedSvcEmuBackEnd.rest.SharedData
@@ -11,6 +11,7 @@ import java.io.File
 import kotlin.test.assertEquals
 
 /**
+ * unused for prod code
  * @author DrTengu, 2024/05
  */
 class BaseTempFixupTest {

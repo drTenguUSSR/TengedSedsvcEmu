@@ -22,9 +22,10 @@ class SedSvcEmuBackEndApplication {
         val relationsCheck = HashSet<String>(allBeans.size)
         for (bean in allBeans) {
             val beanKey=bean.value.commandName.lowercase()
-            loggerTop.debug { "- command=${beanKey}, beanName=${bean.key}, beanClass=${bean.value::class.java.canonicalName}" }
+            loggerTop.debug { "- command=${beanKey}, beanName=${bean.key}, rel=${bean.value.commandRelationSuffix}" +
+                    ", beanClass=${bean.value::class.java.canonicalName}" }
             mapBeans.put(beanKey, bean.value)?.let { throw IllegalStateException("duplicate bean name=${bean.value.commandName}") }
-            mapRelations[beanKey] = CommonResource.Companion.BASIC_NAME_RELATION_BASE+bean.value.commandRelationSuffix
+            mapRelations[beanKey] = CommonResource.BASIC_NAME_RELATION_BASE+bean.value.commandRelationSuffix
             if (!relationsCheck.add(bean.value.commandRelationSuffix)) {
                 throw IllegalStateException("dublicate relation=${bean.value.commandRelationSuffix}")
             }

@@ -1,1 +1,1 @@
-call mvn clean package test
+call mvn clean verify

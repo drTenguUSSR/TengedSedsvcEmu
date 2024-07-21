@@ -1,9 +1,10 @@
-package mil.teng.sedSvcEmuBackEnd.direct
+package mil.teng.sedSvcEmuBackEnd.temp
 
 import io.github.oshai.kotlinlogging.KotlinLogging
 import org.junit.jupiter.api.Test
 
 /**
+ * unused for prod code
  * @author DrTengu, 2024/05
  */
 class ListingSetTest {

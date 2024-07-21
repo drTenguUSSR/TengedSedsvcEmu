@@ -1,4 +1,4 @@
-package mil.teng.sedSvcEmuBackEnd
+package mil.teng.sedSvcEmuBackEnd.temp
 
 import io.github.oshai.kotlinlogging.KotlinLogging
 import org.junit.jupiter.api.BeforeAll
@@ -6,11 +6,12 @@ import org.junit.jupiter.api.Test
 import org.springframework.boot.test.context.SpringBootTest
 
 /**
+ * unused for prod code
  * @author DrTengu, 2024/04
  */
 
 @SpringBootTest
-class SedSvcEmuBackEndApplicationTests {
+class IntegraLoggingTest {
     /*
     using https://github.com/oshai/kotlin-logging
      */

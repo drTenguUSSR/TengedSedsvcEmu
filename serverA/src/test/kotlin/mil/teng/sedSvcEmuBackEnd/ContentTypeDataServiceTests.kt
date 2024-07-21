@@ -8,7 +8,6 @@ import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment
 import org.springframework.http.MediaType
@@ -32,7 +31,7 @@ class ContentTypeDataServiceTests(@Autowired private val svcContentType: Content
 
     @PostConstruct
     fun postConstruct() {
-        logger.debug { "postConstruct: svc=$svcContentType" }
+        logger.debug { "postConstruct: this=$this svc=$svcContentType" }
     }
 
     @Test
