@@ -8,6 +8,7 @@ target/
 /_local/
 /config/
 /logs/
+/*.log
 
 
 ### STS ###

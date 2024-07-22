@@ -11,7 +11,7 @@ import org.springframework.boot.test.context.SpringBootTest
  */
 
 @SpringBootTest
-class IntegraLoggingTest {
+class KotlinLoggingITest {
     /*
     using https://github.com/oshai/kotlin-logging
      */

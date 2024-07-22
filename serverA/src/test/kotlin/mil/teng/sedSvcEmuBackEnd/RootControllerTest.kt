@@ -17,7 +17,7 @@ import org.mockito.Mockito
 import org.mockito.junit.jupiter.MockitoExtension
 
 /**
- * Unit-тест RootController. контекст не поднимается
+ * Unit-тест RootController. Контекст не поднимается
  * @author DrTengu, 2024/07
  */
 
@@ -39,8 +39,7 @@ class RootControllerTest {
 
     @BeforeEach
     fun init() {
-
-
+        logger.debug { "init-called. two relation init" }
         val cmdCheckPdf = Mockito.mock(AbstractCommandProcessor::class.java)
         Mockito.`when`(cmdCheckPdf.commandName).thenReturn("svcCheckPdf")
         Mockito.`when`(cmdCheckPdf.commandRelationSuffix).thenReturn("#checkPdf")
@@ -62,11 +61,11 @@ class RootControllerTest {
         )
         //@formatter:on
         Mockito.`when`(commandsBeanInfo.mapBeans).thenReturn(mapBeans)
-
     }
 
     @Test
-    fun getRoot() {
+    fun getRoot_returnValidRelList() {
+        logger.debug { "getRoot-called" }
         val request = Mockito.mock(HttpServletRequest::class.java)
         Mockito.`when`(request.requestURL).thenReturn(StringBuffer("http://localhost:8071/api"))
         val response = Mockito.mock(HttpServletResponse::class.java)
