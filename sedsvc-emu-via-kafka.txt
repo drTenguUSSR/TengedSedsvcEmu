@@ -1,0 +1,29 @@
+https://www.youtube.com/watch?v=9FikRH8rXas&list=PL7bCtu6TKcyD9w38AM5h-SNT8z1gpOM5F
+	16:53 kafka via docer-compose.yml
+	
+	https://github.com/petrelevich/jvm-digging
+	https://github.com/petrelevich/jvm-digging/tree/master/kafka - kafka без spring boot (19:27)
+	https://github.com/petrelevich/jvm-digging/tree/master/kafka-spring - work on (19:47)
+	далее - spring boot
+
+https://youtu.be/KHN4i2dpxuU?list=PL7bCtu6TKcyD9w38AM5h-SNT8z1gpOM5F&t=296
+	Spring + Kafka навсегда. Настройка окружения.
+	kafka локально
+	5:58 - приложение без спринга, на Котлин
+	
+	console consumer: https://youtu.be/KHN4i2dpxuU?t=1049 17:29 to 23:22
+	
+-------------------------------------------------------------------
+to-read:
+https://www.baeldung.com/kafka-custom-serializer
+
+-------------------------------------------------------------------
+case-a:
+	group: mil.teng.q2024.sedsvc-emu
+	artif: sedsvc-emu-via-kafka
+	package: mil.teng.q2024.sedsvc.emu.via.kafka
++lombok
++Spring Web
++Spring Boot Actuator
++Thymeleaf 
++Spring for Apache Kafka
