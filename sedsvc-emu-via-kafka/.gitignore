@@ -4,6 +4,12 @@ target/
 !**/src/main/**/target/
 !**/src/test/**/target/
 
+/tmpFolder/
+/_local/
+/config/
+/logs/
+/*.log
+
 ### STS ###
 .apt_generated
 .classpath

@@ -4,7 +4,11 @@ https://www.youtube.com/watch?v=9FikRH8rXas&list=PL7bCtu6TKcyD9w38AM5h-SNT8z1gpO
 	https://github.com/petrelevich/jvm-digging
 	https://github.com/petrelevich/jvm-digging/tree/master/kafka - kafka без spring boot (19:27)
 	https://github.com/petrelevich/jvm-digging/tree/master/kafka-spring - work on (19:47)
-	далее - spring boot
+
+Spring + Kafka навсегда. Подключаем Kafka к Spring (part 5)
+	https://www.youtube.com/watch?v=QT68v_zoo2w
+	https://youtu.be/QT68v_zoo2w?t=155
+-------------------------------------------------------------------
 
 https://youtu.be/KHN4i2dpxuU?list=PL7bCtu6TKcyD9w38AM5h-SNT8z1gpOM5F&t=296
 	Spring + Kafka навсегда. Настройка окружения.
@@ -12,18 +16,112 @@ https://youtu.be/KHN4i2dpxuU?list=PL7bCtu6TKcyD9w38AM5h-SNT8z1gpOM5F&t=296
 	5:58 - приложение без спринга, на Котлин
 	
 	console consumer: https://youtu.be/KHN4i2dpxuU?t=1049 17:29 to 23:22
+	https://youtu.be/khOQNd6-4YI?t=34
+	??? kafka via Spring
+	after https://www.youtube.com/watch?v=JK1k04IsKN4&t=301s
+		Spring + Kafka навсегда. Offsets.
+	to-read: https://habr.com/ru/companies/otus/articles/790504/
+		producer = KafkaProducer(bootstrap_servers='localhost:9092', acks='all', min_insync_replicas=2)
+
+
+	??? 
+	Spring + Kafka навсегда. Смотрим партиции на практике. part 4. kafka без spring code/работа в кластере
+	https://youtu.be/xv6e7pc3Vec?t=435
 	
+	Работа с Apache Kafka в приложениях на Spring Boot // Курс «Apache Kafka», часть 1
+	https://www.youtube.com/watch?v=9FikRH8rXas&list=PL7bCtu6TKcyD9w38AM5h-SNT8z1gpOM5F
 -------------------------------------------------------------------
 to-read:
 https://www.baeldung.com/kafka-custom-serializer
 
 -------------------------------------------------------------------
 case-a:
-	group: mil.teng.q2024.sedsvc-emu
-	artif: sedsvc-emu-via-kafka
-	package: mil.teng.q2024.sedsvc.emu.via.kafka
+	Group       : mil.teng.q2024.sedsvc-emu
+	Artifact    : sedsvc-emu-via-kafka
+	Description : demo connector for SedSvcEmu via Kafka
+	Package name: mil.teng.q2024.sedsvc.emu.via.kafka
 +lombok
 +Spring Web
 +Spring Boot Actuator
 +Thymeleaf 
 +Spring for Apache Kafka
++codecentric's Spring Boot Admin (Client)/ spring-boot-admin-started-client
++codecentric's Spring Boot Admin (Server)/ spring-boot-admin-started-server
+
+про админку
+https://under-sky-web.ru/post/podrobnoe_obyyasnenie_administratora_springboot_20
+
+D:\MyDocsTeng-workDoc\github-TengedSedsvcEmu\serverA\src\main\resources\application.properties
+spring.application.name=sedSvcEmuBackEndInt
+#server.servlet.encoding.enabled=false
+#server.servlet.encoding.force=true
+#server.servlet.encoding.charset=UTF-8
+server.error.include-message=always
+
+D:\MyDocsTeng-workDoc\github-TengedSedsvcEmu\serverA\config
+
+spring:
+	boot:
+		admin:
+
+https://github.com/Faoxis/spring-kafka-demo/tree/Part-5
+external-example-kafka
+
+server:
+  port: 5005
+
+
+spring:
+  kafka:
+    consumer:
+      bootstrap-servers: kafka1:9092, kafka2:9092, kafka0:9092
+      group-id: group_id
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+    producer:
+      bootstrap-servers: kafka1:9092, kafka2:9092, kafka0:9092
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+
+  boot:
+    admin:
+      client:
+        url: http://localhost:5005/admin
+      context-path: /admin
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
+
+Logging system failed to initialize using configuration from 'config/log4j2.yaml'
+java.lang.IllegalStateException: Could not initialize Logback logging from config/log4j2.yaml
+
+org.apache.logging.log4j.LoggingException: log4j-slf4j2-impl cannot be present with log4j-to-slf4j
+
+https://docs.spring.io/spring-boot/how-to/logging.html
+
+
+couldn't determine local port. Please set spring.boot.admin.client.instance.service-base-url.
+
+spring.boot.admin.client.instance.service-base-url=mmm
+http://localhost:9020
+
+https://stackoverflow.com/questions/76246935/why-admin-client-throw-the-error-couldnt-determine-local-port
+--------------------------------------
+https://docs.spring.io/spring-boot/how-to/logging.html
+configure its JDK logging adapter by setting the java.util.logging.manager system property to org.apache.logging.log4j.jul.LogManager.
+
+Caused by: java.lang.IllegalArgumentException: LoggerFactory is not a Logback LoggerContext but Logback is on the classpath. Either remove 
+Logback or the competing implementation (class org.apache.logging.slf4j.Log4jLoggerFactory loaded from 
+file:/D:/MyDocs-Maven-Repo1/org/apache/logging/log4j/log4j-slf4j2-impl/2.23.1/log4j-slf4j2-impl-2.23.1.jar). 
+If you are using WebLogic you will need to add 'org.slf4j' to prefer-application-packages in WEB-INF/weblogic.xml: 
+org.apache.logging.slf4j.Log4jLoggerFactory
+--------------------------------------
+Spring + Kafka навсегда. Подключаем Kafka к Spring
+https://www.youtube.com/watch?v=QT68v_zoo2w
+
+

@@ -1,0 +1,1 @@
+mvn dependency:tree >1-show-dep.log

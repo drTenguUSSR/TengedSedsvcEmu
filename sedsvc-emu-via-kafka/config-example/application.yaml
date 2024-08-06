@@ -1,0 +1,39 @@
+server:
+    port: 8071
+
+spring:
+    application:
+          name: sedSvcEmuBackEnd3.ext
+    devtools:
+        add-properties: false
+        livereload:
+            port: 35730
+            enabled: false
+    kafka:
+        consumer:
+            bootstrap-servers: localhost:9092
+            group-id: group_id
+            auto-offset-reset: earliest
+            key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+            value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+        producer:
+            bootstrap-servers: localhost:9092
+            key-serializer: org.apache.kafka.common.serialization.StringSerializer
+            value-serializer: org.apache.kafka.common.serialization.StringSerializer
+
+#    boot:
+#        admin:
+#            client:
+#                url: http://localhost:8071/admin
+#            enable: true
+#            context-path: /admin
+#            auto-registration: true
+#            username: admin
+#            password: 777
+
+
+logging:
+    config: "config/log4j2.yaml"
+
+sedSvc:
+    simpleDebug: true
