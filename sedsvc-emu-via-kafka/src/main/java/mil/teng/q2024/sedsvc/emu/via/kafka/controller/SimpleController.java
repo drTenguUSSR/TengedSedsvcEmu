@@ -1,4 +1,4 @@
-package mil.teng.q2024.sedsvc.emu.via.kafka;
+package mil.teng.q2024.sedsvc.emu.via.kafka.controller;
 
 import java.time.Instant;
 import java.time.LocalDateTime;

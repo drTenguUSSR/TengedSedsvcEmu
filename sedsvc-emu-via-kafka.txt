@@ -121,7 +121,52 @@ file:/D:/MyDocs-Maven-Repo1/org/apache/logging/log4j/log4j-slf4j2-impl/2.23.1/lo
 If you are using WebLogic you will need to add 'org.slf4j' to prefer-application-packages in WEB-INF/weblogic.xml: 
 org.apache.logging.slf4j.Log4jLoggerFactory
 --------------------------------------
-Spring + Kafka навсегда. Подключаем Kafka к Spring
+Spring + Kafka навсегда. Подключаем Kafka к Spring #5
 https://www.youtube.com/watch?v=QT68v_zoo2w
+https://youtu.be/QT68v_zoo2w?t=876
+https://youtu.be/QT68v_zoo2w?t=984 - отправка сообщения через spring+kafka (@rest controller + kafka template)
+
+Spring + Kafka навсегда. Сериализация и десериализация #6
+https://www.youtube.com/watch?v=GuiK0rbfjVU&list=PL7bCtu6TKcyD9w38AM5h-SNT8z1gpOM5F&index=31
+https://youtu.be/GuiK0rbfjVU?list=PL7bCtu6TKcyD9w38AM5h-SNT8z1gpOM5F&t=99
+https://youtu.be/GuiK0rbfjVU?list=PL7bCtu6TKcyD9w38AM5h-SNT8z1gpOM5F&t=119
+https://youtu.be/GuiK0rbfjVU?list=PL7bCtu6TKcyD9w38AM5h-SNT8z1gpOM5F&t=226
 
 
+?
+kafka.consumer.isolationLevel=READ_UNCOMMITED
+
+QA Load Meetup 15. Kafka и тесты производительности
+?https://www.youtube.com/watch?v=ftvFM7pl2Oo
+---------------
+work on
+https://habr.com/ru/companies/slurm/articles/772818/
+https://habr.com/ru/articles/742786/
+
+@Configuration
+public class KafkaProducerConfig {
+
+    @Bean
+    public ProducerFactory<String, String> producerFactory() {
+        Map<String, Object> configProps = new HashMap<>();
+        configProps.put(
+          ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, 
+          bootstrapAddress);
+        configProps.put(
+          ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, 
+          StringSerializer.class);
+        configProps.put(
+          ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, 
+          StringSerializer.class);
+        return new DefaultKafkaProducerFactory<>(configProps);
+    }
+
+    @Bean
+    public KafkaTemplate<String, String> kafkaTemplate() {
+        return new KafkaTemplate<>(producerFactory());
+    }
+}
+
+
+JDK 17 isn't compatibile with gradle 6.0.1. 
+please fix JAVA_HOME environment variable
