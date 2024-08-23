@@ -37,4 +37,4 @@ logging:
 
 sedSvc:
     simpleDebug: true
-    topic-rcpt: top-reg-2329
+    topic-rcpt: top-reg-2345

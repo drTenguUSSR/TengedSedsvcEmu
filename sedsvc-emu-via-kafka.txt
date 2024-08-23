@@ -167,6 +167,3 @@ public class KafkaProducerConfig {
     }
 }
 
-
-JDK 17 isn't compatibile with gradle 6.0.1. 
-please fix JAVA_HOME environment variable
