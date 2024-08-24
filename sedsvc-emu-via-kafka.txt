@@ -143,30 +143,6 @@ work on
 https://habr.com/ru/companies/slurm/articles/772818/
 https://habr.com/ru/articles/742786/
 
-@Configuration
-public class KafkaProducerConfig {
-
-    @Bean
-    public ProducerFactory<String, String> producerFactory() {
-        Map<String, Object> configProps = new HashMap<>();
-        configProps.put(
-          ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, 
-          bootstrapAddress);
-        configProps.put(
-          ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, 
-          StringSerializer.class);
-        configProps.put(
-          ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, 
-          StringSerializer.class);
-        return new DefaultKafkaProducerFactory<>(configProps);
-    }
-
-    @Bean
-    public KafkaTemplate<String, String> kafkaTemplate() {
-        return new KafkaTemplate<>(producerFactory());
-    }
-}
-
 ! задание ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG через код, а не yaml
 https://youtu.be/GuiK0rbfjVU?list=PL7bCtu6TKcyD9w38AM5h-SNT8z1gpOM5F&t=86
-https://youtu.be/9FikRH8rXas?list=PL7bCtu6TKcyD9w38AM5h-SNT8z1gpOM5F&t=1353
+https://youtu.be/9FikRH8rXas?list=PL7bCtu6TKcyD9w38AM5h-SNT8z1gpOM5F&t=1661

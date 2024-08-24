@@ -17,9 +17,9 @@ spring:
             key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
             value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
         producer:
+            #?? acks
             bootstrap-servers: localhost:9092
-            key-serializer: org.apache.kafka.common.serialization.StringSerializer
-            value-serializer: org.apache.kafka.common.serialization.StringSerializer
+            client-id: web-send-requests-104
 
 #    boot:
 #        admin:
@@ -38,3 +38,4 @@ logging:
 sedSvc:
     simpleDebug: true
     topic-rcpt: top-reg-2345
+    topic-from: top-from-2256

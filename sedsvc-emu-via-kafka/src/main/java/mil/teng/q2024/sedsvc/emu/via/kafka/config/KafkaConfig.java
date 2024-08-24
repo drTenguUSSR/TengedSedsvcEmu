@@ -1,11 +1,13 @@
 package mil.teng.q2024.sedsvc.emu.via.kafka.config;
 
-
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.admin.AdminClient;
 import org.apache.kafka.clients.admin.AdminClientConfig;
 import org.apache.kafka.clients.admin.ListTopicsOptions;
 import org.apache.kafka.clients.admin.ListTopicsResult;
+import org.apache.kafka.clients.producer.ProducerConfig;
+import org.apache.kafka.common.serialization.StringSerializer;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.kafka.KafkaProperties;
@@ -17,10 +19,12 @@ import org.springframework.kafka.core.DefaultKafkaProducerFactory;
 import org.springframework.kafka.core.KafkaAdmin;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.core.ProducerFactory;
+import org.springframework.kafka.support.serializer.JsonSerializer;
 import org.springframework.util.StringUtils;
 
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ExecutionException;
 
 @Configuration
 @Slf4j
@@ -35,21 +39,27 @@ public class KafkaConfig implements InitializingBean {
     private String topicFrom;
 
     public KafkaConfig(KafkaProperties kafkaProperties, KafkaAdmin kafkaAdmin) {
-        log.debug("KafkaConfig: .ctor. kProps={} admin={}", kafkaProperties, kafkaAdmin);
+        log.debug("KafkaConfig: .ctor");
         this.kafkaProperties = kafkaProperties;
         this.kafkaAdmin = kafkaAdmin;
     }
 
     @Bean
-    public ProducerFactory<String, String> producerFactory() {
+    public ProducerFactory<String, Object> producerFactory(ObjectMapper objectMapper) {
         log.debug("producerFactory: called. kafkaProperties={}", kafkaProperties);
         SslBundles sslBundles = new DefaultSslBundleRegistry(); //TODO check!
         Map<String, Object> props = kafkaProperties.buildProducerProperties(sslBundles);
-        return new DefaultKafkaProducerFactory<>(props);
+        props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
+        props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class);
+        // set to remove '__TypeId__' Kafka header with full class name
+        props.put(JsonSerializer.ADD_TYPE_INFO_HEADERS, false);
+        DefaultKafkaProducerFactory<String, Object> kFactory = new DefaultKafkaProducerFactory<>(props);
+        kFactory.setValueSerializer(new JsonSerializer<>(objectMapper));
+        return kFactory;
     }
 
     @Bean
-    public KafkaTemplate<String, String> kafkaTemplate(ProducerFactory<String, String> producerFactory) {
+    public KafkaTemplate<String, Object> kafkaTemplate(ProducerFactory<String, Object> producerFactory) {
         log.debug("kafkaTemplate: called. producerFactory={}", producerFactory);
         Map<String, Object> props = producerFactory.getConfigurationProperties();
         log.debug("kafkaTemplate. producerFactory.props({})=[", props.size());
@@ -61,10 +71,9 @@ public class KafkaConfig implements InitializingBean {
     /**
      * check (Kafka topic names are case-sensitive) topics exists
      *
-     * @throws Exception
      */
     @Override
-    public void afterPropertiesSet() throws Exception {
+    public void afterPropertiesSet() throws ExecutionException, InterruptedException {
         log.debug("afterPropertiesSet-beg. topicFrom={} topicRcpt={}", this.topicFrom, this.topicRcpt);
         if (!StringUtils.hasText(this.topicFrom) || !StringUtils.hasText(this.topicRcpt)) {
             throw new IllegalStateException("All topics must be non-empty. "

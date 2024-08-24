@@ -28,6 +28,24 @@ Configuration:
               AppenderRef:
                 - ref: Console_Appender
                 - ref: File_Appender
+            - name: org.apache.kafka.clients.admin.AdminClientConfig
+              level: debug
+              additivity: false
+              AppenderRef:
+                - ref: Console_Appender
+                - ref: File_Appender
+            - name: org.apache.kafka.clients.consumer.internals.SubscriptionState
+              level: debug
+              additivity: false
+              AppenderRef:
+                - ref: Console_Appender
+                - ref: File_Appender
+            - name: org.apache.kafka.clients.producer.KafkaProducer
+              level: debug
+              additivity: false
+              AppenderRef:
+                - ref: Console_Appender
+                - ref: File_Appender
         Root:
             AppenderRef:
                 - ref: Console_Appender
