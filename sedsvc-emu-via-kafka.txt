@@ -167,3 +167,6 @@ public class KafkaProducerConfig {
     }
 }
 
+! задание ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG через код, а не yaml
+https://youtu.be/GuiK0rbfjVU?list=PL7bCtu6TKcyD9w38AM5h-SNT8z1gpOM5F&t=86
+https://youtu.be/9FikRH8rXas?list=PL7bCtu6TKcyD9w38AM5h-SNT8z1gpOM5F&t=1353

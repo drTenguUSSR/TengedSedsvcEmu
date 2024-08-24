@@ -17,6 +17,7 @@ import org.springframework.kafka.core.DefaultKafkaProducerFactory;
 import org.springframework.kafka.core.KafkaAdmin;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.core.ProducerFactory;
+import org.springframework.util.StringUtils;
 
 import java.util.Map;
 import java.util.Set;
@@ -29,6 +30,9 @@ public class KafkaConfig implements InitializingBean {
 
     @Value("${sedSvc.topic-rcpt}")
     private String topicRcpt;
+
+    @Value("${sedSvc.topic-from}")
+    private String topicFrom;
 
     public KafkaConfig(KafkaProperties kafkaProperties, KafkaAdmin kafkaAdmin) {
         log.debug("KafkaConfig: .ctor. kProps={} admin={}", kafkaProperties, kafkaAdmin);
@@ -54,16 +58,29 @@ public class KafkaConfig implements InitializingBean {
         return new KafkaTemplate<>(producerFactory);
     }
 
+    /**
+     * check (Kafka topic names are case-sensitive) topics exists
+     *
+     * @throws Exception
+     */
     @Override
     public void afterPropertiesSet() throws Exception {
-        log.debug("afterPropertiesSet-beg. topic={}", this.topicRcpt);
+        log.debug("afterPropertiesSet-beg. topicFrom={} topicRcpt={}", this.topicFrom, this.topicRcpt);
+        if (!StringUtils.hasText(this.topicFrom) || !StringUtils.hasText(this.topicRcpt)) {
+            throw new IllegalStateException("All topics must be non-empty. "
+                    + "topicFrom=[" + topicFrom + "] topicRcpt=[" + topicRcpt + "]");
+        }
         try (AdminClient admin = AdminClient.create(kafkaAdmin.getConfigurationProperties())) {
             ListTopicsOptions options = new ListTopicsOptions();
             ListTopicsResult topicsResult = admin.listTopics(options);
             Set<String> topics = topicsResult.names().get();
-            if (topics.stream().noneMatch(it -> it.equals(this.topicRcpt))) {
-                throw new IllegalStateException("topic [" + this.topicRcpt + "] not found on broker "
-                        + kafkaAdmin.getConfigurationProperties().get(AdminClientConfig.BOOTSTRAP_SERVERS_CONFIG));
+            if (topics.stream().filter(it -> it.equals(this.topicFrom) || it.equals(this.topicRcpt)).count() != 2) {
+                throw new IllegalStateException("some topic not found (topic names are case-sensitive)."
+                        + " topicRcpt=[" + this.topicRcpt + "]" + " topicFrom=[" + this.topicFrom + "]"
+                        + " on servers="
+                        + kafkaAdmin.getConfigurationProperties().get(AdminClientConfig.BOOTSTRAP_SERVERS_CONFIG)
+                        + " current topics=" + topics
+                );
             }
         }
 
