@@ -1,0 +1,2 @@
+runner config. "add VM options"
+-Djava.io.tmpdir=_tmpFolder

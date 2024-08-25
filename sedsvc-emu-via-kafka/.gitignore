@@ -4,8 +4,9 @@ target/
 !**/src/main/**/target/
 !**/src/test/**/target/
 
-/tmpFolder/
 /_local/
+/_tmpFolder/
+/_work-cache/
 /config/
 /logs/
 /*.log

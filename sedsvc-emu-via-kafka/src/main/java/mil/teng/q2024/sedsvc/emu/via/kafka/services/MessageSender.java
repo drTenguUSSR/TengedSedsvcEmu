@@ -3,7 +3,9 @@ package mil.teng.q2024.sedsvc.emu.via.kafka.services;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.extern.slf4j.Slf4j;
 import mil.teng.q2024.sedsvc.emu.via.kafka.dto.KafkaMessage;
+import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.clients.producer.RecordMetadata;
+import org.apache.kafka.common.header.Header;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.support.SendResult;
@@ -24,12 +26,16 @@ public class MessageSender {
         this.kafkaTemplate = kafkaTemplate;
     }
 
-    public String send(KafkaMessage msg) throws JsonProcessingException, ExecutionException, InterruptedException {
+    public String send(Object msg) throws JsonProcessingException, ExecutionException, InterruptedException {
         CompletableFuture<SendResult<String, Object>> sendRes = kafkaTemplate.send(rcptTopicName, msg);
+        //TODO: use ProducerRecord for send - add headers.
+        // ProducerRecord<String, Object> rec = new ProducerRecord<>("topic", "key", msg);
+
         //TODO: forced sync send
         SendResult<String, Object> res = sendRes.get();
         RecordMetadata meta = res.getRecordMetadata();
         log.debug("sended: key={} meta={}", res.getProducerRecord().key(), meta.toString());
         return meta.toString();
     }
+
 }

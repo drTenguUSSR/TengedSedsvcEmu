@@ -37,5 +37,6 @@ logging:
 
 sedSvc:
     simpleDebug: true
+    cache-dir: D:\MyDocsTeng-workDoc\github-TengedSedsvcEmu\sedsvc-emu-via-kafka\_work-cache
     topic-rcpt: top-reg-2345
     topic-from: top-from-2256

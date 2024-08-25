@@ -2,6 +2,7 @@ package mil.teng.q2024.sedsvc.emu.via.kafka.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
+import mil.teng.q2024.sedsvc.emu.via.kafka.services.TengUtils;
 import org.apache.kafka.clients.admin.AdminClient;
 import org.apache.kafka.clients.admin.AdminClientConfig;
 import org.apache.kafka.clients.admin.ListTopicsOptions;
@@ -74,7 +75,10 @@ public class KafkaConfig implements InitializingBean {
      */
     @Override
     public void afterPropertiesSet() throws ExecutionException, InterruptedException {
-        log.debug("afterPropertiesSet-beg. topicFrom={} topicRcpt={}", this.topicFrom, this.topicRcpt);
+        log.debug("afterPropertiesSet-beg");
+        log.debug("env: tempFolder={}", TengUtils.getTempFolder());
+
+        log.debug("topicFrom={} topicRcpt={}", this.topicFrom, this.topicRcpt);
         if (!StringUtils.hasText(this.topicFrom) || !StringUtils.hasText(this.topicRcpt)) {
             throw new IllegalStateException("All topics must be non-empty. "
                     + "topicFrom=[" + topicFrom + "] topicRcpt=[" + topicRcpt + "]");
