@@ -16,7 +16,7 @@ import java.util.concurrent.ExecutionException;
 @Slf4j
 public class MessageSender {
     private static final String TOPIC_HEADER_ID = "id";
-    private static final String TOPIC_HEADER_FROM = "from";
+    private static final String TOPIC_REPLY_TO = "reply-to";
     private static final String TOPIC_IN_REPLY_TO = "in-reply-to";
     private final KafkaTemplate<String, Object> kafkaTemplate;
 
@@ -25,19 +25,19 @@ public class MessageSender {
     }
 
     /**
-     * отправка объекта в топик с обратным адресом
+     * отправка объекта в топик с обратным адресом (опционально)
      *
-     * @param topicFrom топик "отправитель" - в него ожидается ответное сообщение (при наличии) от адресата
-     * @param topicRcpt топик "получатель"
+     * @param topicRcpt топик "получатель", куда направляется сообщение
+     * @param topicReplyTo ответный топик - в него ожидается ответное сообщение (при наличии) от адресата
      * @param messageId идентификатор сообщения (используется в ответном сообщении в заголовке in-reply-to
      * @param msg       объект-сообщение
      * @return информация об отправке
      */
-    public String send(@NonNull String topicFrom, @NonNull String topicRcpt, @NonNull String messageId, @NonNull Object msg)
+    public String send(@NonNull String topicRcpt, String topicReplyTo, @NonNull String messageId, @NonNull Object msg)
             throws ExecutionException, InterruptedException {
         ProducerRecord<String, Object> producerRecord = new ProducerRecord<>(topicRcpt, msg);
         producerRecord.headers().add(TOPIC_HEADER_ID, messageId.getBytes(StandardCharsets.UTF_8));
-        producerRecord.headers().add(TOPIC_HEADER_FROM, topicFrom.getBytes(StandardCharsets.UTF_8));
+        producerRecord.headers().add(TOPIC_REPLY_TO, topicReplyTo.getBytes(StandardCharsets.UTF_8));
         CompletableFuture<SendResult<String, Object>> sendRes = kafkaTemplate.send(producerRecord);
         sendRes
                 .thenAccept(it -> log.debug("send: async-sended-pass={}", it))

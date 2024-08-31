@@ -50,67 +50,8 @@ case-a:
 
 про админку
 https://under-sky-web.ru/post/podrobnoe_obyyasnenie_administratora_springboot_20
-
-D:\MyDocsTeng-workDoc\github-TengedSedsvcEmu\serverA\src\main\resources\application.properties
-spring.application.name=sedSvcEmuBackEndInt
-#server.servlet.encoding.enabled=false
-#server.servlet.encoding.force=true
-#server.servlet.encoding.charset=UTF-8
-server.error.include-message=always
-
-D:\MyDocsTeng-workDoc\github-TengedSedsvcEmu\serverA\config
-
-spring:
-	boot:
-		admin:
-
 https://github.com/Faoxis/spring-kafka-demo/tree/Part-5
 external-example-kafka
-
-server:
-  port: 5005
-
-
-spring:
-  kafka:
-    consumer:
-      bootstrap-servers: kafka1:9092, kafka2:9092, kafka0:9092
-      group-id: group_id
-      auto-offset-reset: earliest
-      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-    producer:
-      bootstrap-servers: kafka1:9092, kafka2:9092, kafka0:9092
-      key-serializer: org.apache.kafka.common.serialization.StringSerializer
-      value-serializer: org.apache.kafka.common.serialization.StringSerializer
-
-  boot:
-    admin:
-      client:
-        url: http://localhost:5005/admin
-      context-path: /admin
-
-management:
-  endpoints:
-    web:
-      exposure:
-        include: "*"
-
-
-Logging system failed to initialize using configuration from 'config/log4j2.yaml'
-java.lang.IllegalStateException: Could not initialize Logback logging from config/log4j2.yaml
-
-org.apache.logging.log4j.LoggingException: log4j-slf4j2-impl cannot be present with log4j-to-slf4j
-
-https://docs.spring.io/spring-boot/how-to/logging.html
-
-
-couldn't determine local port. Please set spring.boot.admin.client.instance.service-base-url.
-
-spring.boot.admin.client.instance.service-base-url=mmm
-http://localhost:9020
-
-https://stackoverflow.com/questions/76246935/why-admin-client-throw-the-error-couldnt-determine-local-port
 --------------------------------------
 https://docs.spring.io/spring-boot/how-to/logging.html
 configure its JDK logging adapter by setting the java.util.logging.manager system property to org.apache.logging.log4j.jul.LogManager.
@@ -141,8 +82,13 @@ QA Load Meetup 15. Kafka и тесты производительности
 ---------------
 work on
 https://habr.com/ru/companies/slurm/articles/772818/
-https://habr.com/ru/articles/742786/
+!! https://habr.com/ru/articles/742786/
+https://habr.com/ru/articles/496182/
+https://habr.com/ru/articles/793134/
+https://dzen.ru/a/ZYxkMScKAQiqt27g
 
 ! задание ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG через код, а не yaml
 https://youtu.be/GuiK0rbfjVU?list=PL7bCtu6TKcyD9w38AM5h-SNT8z1gpOM5F&t=86
 https://youtu.be/9FikRH8rXas?list=PL7bCtu6TKcyD9w38AM5h-SNT8z1gpOM5F&t=1661
+--------------------------------------
+creating topics via console

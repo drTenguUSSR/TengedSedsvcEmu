@@ -1,4 +1,5 @@
 {
+  "_header-content-type": "application/vnd.intertrust.cm.sedsvc+json;type=svcRegSignStamp-request",
   "regStampDatas":[
     {
       "id":"test-reg",
