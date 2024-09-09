@@ -1,3 +1,8 @@
+/*
+ *
+ * @author DrTengu. 2024/09
+ */
+
 package mil.teng.q2024.sedsvc.emu.via.kafka.temp.common;
 
 import mil.teng.q2024.sedsvc.emu.via.kafka.services.BrokerMessageEnvelope;

@@ -1,3 +1,8 @@
+/*
+ *
+ * @author DrTengu. 2024/08
+ */
+
 package mil.teng.q2024.sedsvc.emu.via.kafka.controller;
 
 import lombok.extern.slf4j.Slf4j;
@@ -10,10 +15,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
-
-/**
- * @author DrTengu, 2024/08
- */
 
 @RestController
 @Slf4j

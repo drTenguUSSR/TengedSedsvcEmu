@@ -1,3 +1,8 @@
+/*
+ *
+ * @author DrTengu. 2024/09
+ */
+
 package mil.teng.q2024.sedsvc.emu.via.kafka.temp.simple;
 
 import java.nio.charset.StandardCharsets;
@@ -10,9 +15,6 @@ import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.apache.kafka.common.header.Headers;
 import org.apache.kafka.common.serialization.StringDeserializer;
 
-/**
- * @author DrTengu, 2024/07
- */
 public class SimpleConsoleConsumer {
     public static void main(String[] args) {
         xlog("SimpleConsoleConsumer/beg");
